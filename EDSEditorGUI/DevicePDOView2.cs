@@ -223,9 +223,7 @@ namespace ODEditor
 
             MouseEventArgs ma = (MouseEventArgs)e;
 
-            int foundrow, foundcol;
-            SourceGrid.Cells.ICellVirtual v = getItemAtGridPoint(ma.Location, out foundrow, out foundcol);
-
+            int foundrow = grid1.Selection.ActivePosition.Row;
             grid1.Selection.ResetSelection(false);
             grid1.Selection.SelectRow(foundrow, true);
 
