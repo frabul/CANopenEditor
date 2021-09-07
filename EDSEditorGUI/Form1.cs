@@ -100,7 +100,7 @@ namespace ODEditor
             {
                 MessageBox.Show("Loading profiles has failed for the following reason :\n" + e.ToString());
             }
-        
+
         }
 
         void ProfileAddClick(object sender, EventArgs e)
@@ -168,14 +168,14 @@ namespace ODEditor
             }
         }
 
-        private void openEDSfile(string path,InfoSection.Filetype ft)
+        private void openEDSfile(string path, InfoSection.Filetype ft)
         {
             Warnings.warning_list.Clear();
 
             try
             {
                 EDSsharp eds = new EDSsharp();
-                Device dev; 
+                Device dev;
 
                 eds.Loadfile(path);
                 Bridge bridge = new Bridge(); //tell me again why bridge is not static?
@@ -277,7 +277,7 @@ namespace ODEditor
             if (odf.ShowDialog() == DialogResult.OK)
             {
 
-                switch(Path.GetExtension(odf.FileName).ToLower())
+                switch (Path.GetExtension(odf.FileName).ToLower())
                 {
                     case ".xdd":
                     case ".xdc":
@@ -301,7 +301,7 @@ namespace ODEditor
                         return;
 
                 }
-              
+
                 addtoMRU(odf.FileName);
             }
 
@@ -407,11 +407,11 @@ namespace ODEditor
 
         private void Eds_onDataDirty(bool dirty, EDSsharp sender)
         {
-            foreach(TabPage page in tabControl1.TabPages)
+            foreach (TabPage page in tabControl1.TabPages)
             {
-                foreach(Control c in page.Controls)
+                foreach (Control c in page.Controls)
                 {
-                    if(c.GetType() == typeof(DeviceView))
+                    if (c.GetType() == typeof(DeviceView))
                     {
                         DeviceView d = (DeviceView)c;
                         if (d.eds.Dirty == true)
@@ -472,9 +472,9 @@ namespace ODEditor
 
                 DeviceView device = (DeviceView)tabControl1.SelectedTab.Controls[0];
 
-                if(device.eds.Dirty==true)
+                if (device.eds.Dirty == true)
                 {
-                    if (MessageBox.Show( "All unsaved changes will be lost\n continue?", "Unsaved changes", MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show("All unsaved changes will be lost\n continue?", "Unsaved changes", MessageBoxButtons.YesNo) == DialogResult.No)
                         return;
                 }
 
@@ -487,7 +487,7 @@ namespace ODEditor
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-             Close();
+            Close();
         }
 
         private void exportDeviceFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -526,6 +526,7 @@ namespace ODEditor
 
                 if (dv.eds.xddfilename_1_1 != "")
                 {
+                    dv.FlushPendingChanges();
                     dosave(dv, dv.eds.xddfilename_1_1, true);
                 }
                 else
@@ -653,7 +654,7 @@ namespace ODEditor
 
         private void tabControl1_ControlsChanged(object sender, ControlEventArgs e)
         {
-            enablesavemenus(tabControl1.TabCount > 0);  
+            enablesavemenus(tabControl1.TabCount > 0);
         }
 
         private void tabControl1_Controlsremoved(object sender, ControlEventArgs e)
@@ -687,11 +688,11 @@ namespace ODEditor
             if (ext != null)
                 ext = ext.ToLower();
 
-            if ( ext == ".xml" )
+            if (ext == ".xml")
                 openXMLfile(filepath);
             if (ext == ".xdd" || ext == ".xdc" || ext == ".xpd")
                 openXDDfile(filepath);
-            if ( ext == ".eds" )
+            if (ext == ".eds")
                 openEDSfile(filepath, InfoSection.Filetype.File_EDS);
             if (ext == ".dcf")
                 openEDSfile(filepath, InfoSection.Filetype.File_DCF);
@@ -769,7 +770,7 @@ namespace ODEditor
                 var item = new ToolStripMenuItem(path);
                 item.Tag = path;
                 item.Click += OpenRecentFile;
-                switch(Path.GetExtension(path))
+                switch (Path.GetExtension(path))
                 {
                     case ".xml":
                         item.Image = Properties.Resources.GenericVSEditor_9905;
@@ -901,7 +902,7 @@ namespace ODEditor
                 //eds.filename = path;  //fixme
 
                 tabControl1.TabPages.Add(eds.di.ProductName);
-                
+
 
                 DeviceView device = new DeviceView(eds);
 
@@ -945,7 +946,7 @@ namespace ODEditor
 
             if (IsRunningOnMono())
             {
-                System.Diagnostics.Process.Start("file://"+temp);
+                System.Diagnostics.Process.Start("file://" + temp);
             }
             else
             {
@@ -1113,13 +1114,13 @@ namespace ODEditor
                         DeviceView d = (DeviceView)c;
                         if (d.eds.Dirty == true)
                         {
-                           if(MessageBox.Show("Warning you have unsaved changes\n Do you wish to continue","Unsaved changes",MessageBoxButtons.YesNo)==DialogResult.No)
+                            if (MessageBox.Show("Warning you have unsaved changes\n Do you wish to continue", "Unsaved changes", MessageBoxButtons.YesNo) == DialogResult.No)
                             {
                                 e.Cancel = true;
                                 return;
                             }
                         }
-                       
+
                     }
 
                 }
@@ -1157,15 +1158,15 @@ namespace ODEditor
             this.Activate();
             bool unsupportedFile = false;
             var data = e.Data.GetData(DataFormats.FileDrop);
-            if (data != null && data.GetType()==typeof(String))
-            {                
+            if (data != null && data.GetType() == typeof(String))
+            {
                 var rawFileNames = data as string[];
                 if (rawFileNames.Length > 0)
                 {
                     var fileNames = rawFileNames.Distinct();
                     foreach (string fileName in fileNames)
                     {
-                        if(fileTypeSupported(fileName) == false)
+                        if (fileTypeSupported(fileName) == false)
                         {
                             unsupportedFile = true;
                             break;
@@ -1188,14 +1189,14 @@ namespace ODEditor
                 enableDragDropTooltip();
 
             }
-                
+
             else
             {
-               e.Effect = DragDropEffects.None;
+                e.Effect = DragDropEffects.None;
                 //disableDragDropTooltip();
                 enableDragDropTooltip();
             }
-                
+
         }
 
         private void enableDragDropTooltip()
@@ -1273,7 +1274,7 @@ namespace ODEditor
 
         private void ODEditor_MainForm_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
         {
-            if(e.EscapePressed)
+            if (e.EscapePressed)
             {
                 e.Action = DragAction.Cancel;
                 disableDragDropTooltip();

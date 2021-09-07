@@ -72,6 +72,26 @@ namespace ODEditor
 
             Invalidated += DevicePDOView2_Invalidated;
         }
+        private bool IsPDOIndexOk()
+        {
+            UInt16 config = libEDSsharp.EDSsharp.ConvertToUInt16(textBox_slot.Text);
+            if (!isTXPDO)
+            {
+                if (config < 0x1400 | config >= 0x1600)
+                    return false;
+            }
+            else
+            {
+                if (config < 0x1800 | config >= 0x1A00)
+                    return false;
+            }
+            return true;
+        }
+        internal void FlushPendingChanges()
+        {
+            if (IsPDOIndexOk())
+                button_savepdochanges_Click_1(this, null);
+        }
 
         private void DevicePDOView2_Invalidated(object sender, InvalidateEventArgs e)
         {

@@ -91,7 +91,10 @@ namespace ODEditor
                 textBox_lssserial.Text = eds.dc.LSS_SerialNumber.ToString();
             }
         }
-
+        public void FlushPendingChanges()
+        {
+            button_update_devfile_info_Click(this, null);
+        }
         private void button_update_devfile_info_Click(object sender, EventArgs e)
         {
             if (eds == null)

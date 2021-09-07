@@ -56,6 +56,15 @@ namespace ODEditor
 
         #region UpdateDispatchEvents
 
+        public void FlushPendingChanges()
+        {
+            deviceInfoView.FlushPendingChanges();
+            deviceODView1.FlushPendingChanges();
+            devicePDOView1.FlushPendingChanges();
+            devicePDOView2.FlushPendingChanges();
+        }
+
+
         // This region handles update requests that are dispatched to the various user controls on the tabs
 
         public void dispatch_updatedevice()

@@ -112,6 +112,11 @@ namespace ODEditor
             listView_subObjects.DoubleBuffering(true);
         }
 
+        internal void FlushPendingChanges()
+        {
+            Button_saveChanges_Click(this, null);
+        }
+
         private bool Checkdirty()
         {
             if (button_saveChanges.BackColor == Color.Red)
@@ -407,7 +412,8 @@ namespace ODEditor
                 {
                     od.datatype = (DataType)Enum.Parse(typeof(DataType), comboBox_dataType.SelectedItem.ToString());
                 }
-                catch (Exception) {
+                catch (Exception)
+                {
                     od.datatype = DataType.UNKNOWN;
                 }
 
@@ -609,7 +615,7 @@ namespace ODEditor
         {
             ComboBox comboBox = (ComboBox)sender;
 
-            if (comboBox.SelectedItem!=null && comboBox.SelectedItem.ToString() == "Add...")
+            if (comboBox.SelectedItem != null && comboBox.SelectedItem.ToString() == "Add...")
             {
                 NewItem dialog = new NewItem("Add Storage Group");
                 if (dialog.ShowDialog() == DialogResult.OK && comboBox.FindStringExact(dialog.name) == -1)
