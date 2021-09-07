@@ -194,7 +194,7 @@ namespace ODEditor
                     comboBox_countLabel.Items.Insert(comboBox_countLabel.Items.Count - 1, countLabel);
 
                 string storageGroup = od.prop.CO_storageGroup;
-                if (!comboBox_storageGroup.Items.Contains(storageGroup))
+                if (storageGroup != null && !comboBox_storageGroup.Items.Contains(storageGroup))
                     comboBox_storageGroup.Items.Insert(comboBox_storageGroup.Items.Count - 1, storageGroup);
             }
 
