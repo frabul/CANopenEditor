@@ -309,7 +309,7 @@ namespace libEDSsharp
                 config.objecttype = ObjectType.REC;
 
                 ODentry sub = new ODentry("max sub-index", (ushort)slot.ConfigurationIndex, 0);
-                sub.defaultvalue = "6";
+                sub.defaultvalue = "3";
                 sub.datatype = DataType.UNSIGNED8;
                 sub.accesstype = EDSsharp.AccessType.ro;
                 config.addsubobject(0x00,sub);
@@ -320,6 +320,7 @@ namespace libEDSsharp
 
                 if (slot.isTXPDO())
                 {
+                    config.subobjects[0].defaultvalue = "6";
 
                     config.parameter_name = "TPDO communication parameter";
                     config.prop.CO_countLabel = "TPDO";
@@ -363,6 +364,7 @@ namespace libEDSsharp
                 }
                 else
                 {
+                    config.subobjects[0].defaultvalue = "2";
                     config.parameter_name = "RPDO communication parameter";
                     config.prop.CO_countLabel = "RPDO";
 
