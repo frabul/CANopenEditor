@@ -306,14 +306,17 @@
             // grid1
             // 
             this.grid1.AllowDrop = true;
+            this.grid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grid1.DefaultWidth = 18;
             this.grid1.EnableSort = true;
             this.grid1.Location = new System.Drawing.Point(30, 244);
-            this.grid1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.grid1.Margin = new System.Windows.Forms.Padding(2);
             this.grid1.Name = "grid1";
             this.grid1.OptimizeMode = SourceGrid.CellOptimizeMode.ForRows;
             this.grid1.SelectionMode = SourceGrid.GridSelectionMode.Cell;
-            this.grid1.Size = new System.Drawing.Size(1033, 288);
+            this.grid1.Size = new System.Drawing.Size(1023, 288);
             this.grid1.TabIndex = 21;
             this.grid1.TabStop = true;
             this.grid1.ToolTipText = "";
@@ -323,8 +326,9 @@
             // 
             // button_down
             // 
+            this.button_down.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_down.Location = new System.Drawing.Point(32, 535);
-            this.button_down.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_down.Margin = new System.Windows.Forms.Padding(2);
             this.button_down.Name = "button_down";
             this.button_down.Size = new System.Drawing.Size(69, 30);
             this.button_down.TabIndex = 22;
@@ -334,8 +338,9 @@
             // 
             // button_up
             // 
+            this.button_up.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_up.Location = new System.Drawing.Point(105, 535);
-            this.button_up.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_up.Margin = new System.Windows.Forms.Padding(2);
             this.button_up.Name = "button_up";
             this.button_up.Size = new System.Drawing.Size(75, 30);
             this.button_up.TabIndex = 23;
@@ -379,7 +384,7 @@
             this.Controls.Add(this.listView_TXPDO);
             this.Controls.Add(this.button_addPDO);
             this.Controls.Add(this.groupBox1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "DevicePDOView2";
             this.Size = new System.Drawing.Size(1067, 570);
             this.groupBox1.ResumeLayout(false);
