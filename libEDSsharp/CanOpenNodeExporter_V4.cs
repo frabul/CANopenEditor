@@ -108,33 +108,33 @@ namespace libEDSsharp
                     continue;
                 // The code below is nessesary if you have old eds file, that do not have "CO_countLabel" set.
                 // Count objects for initialization of CO_config_t object.
-                if (od.Index==0x1017)
+                if (od.Index == 0x1017)
                     CNT_NMT++;
-                if (od.Index==0x1016)
+                if (od.Index == 0x1016)
                     CNT_HB_CONS++;
-                if ((od.Index==0x1014 || od.Index==0x1015) && CNT_EM==0)
+                if ((od.Index == 0x1014 || od.Index == 0x1015) && CNT_EM == 0)
                     CNT_EM++;
-                if (od.Index>=0x1200 && od.Index<0x1280)
+                if (od.Index >= 0x1200 && od.Index < 0x1280)
                     CNT_SDO_SRV++;
-                if (od.Index>=0x1280 && od.Index<0x1300)
+                if (od.Index >= 0x1280 && od.Index < 0x1300)
                     CNT_SDO_CLI++;
-                if (od.Index==0x1012)
+                if (od.Index == 0x1012)
                     CNT_TIME++;
-                if (od.Index==0x1005)
+                if (od.Index == 0x1005)
                     CNT_SYNC++;
-                if (od.Index>=0x1400 && od.Index<0x1500)
+                if (od.Index >= 0x1400 && od.Index < 0x1500)
                     CNT_RPDO++;
-                if (od.Index>=0x1800 && od.Index<0x1900)
+                if (od.Index >= 0x1800 && od.Index < 0x1900)
                     CNT_TPDO++;
-                if (od.Index==0x1300)
+                if (od.Index == 0x1300)
                     CNT_GFC++;
-                if (od.Index>=0x1301 && od.Index<0x1380)
+                if (od.Index >= 0x1301 && od.Index < 0x1380)
                     CNT_SRDO++;
-                if (od.Index==0x1010)
+                if (od.Index == 0x1010)
                     CNT_STORAGE++;
-                if (od.Index==0x1014)
+                if (od.Index == 0x1014)
                     CNT_EM_PROD++;
-                if (od.Index==0x1006)
+                if (od.Index == 0x1006)
                     CNT_SYNC_PROD++;
                 if (od.Index == 0x1006)
                     CNT_HB_PROD++;
@@ -191,9 +191,10 @@ namespace libEDSsharp
                         ODCnt.Add(od.prop.CO_countLabel, 1);
                 }
             }
-            CNT_SRDO=(UInt16)(CNT_SRDO/2);
+            CNT_SRDO = (UInt16)(CNT_SRDO / 2);
             // The code below is nessesary if you have old eds file, that do not have "CO_countLabel" set.
-            if (ODCnt.Count==0) {
+            if (ODCnt.Count == 0)
+            {
                 ODCnt.Add("HB_CONS", CNT_HB_CONS);
                 ODCnt.Add("NMT", CNT_NMT);
                 ODCnt.Add("EM", CNT_EM);
@@ -597,7 +598,7 @@ namespace libEDSsharp
         /// <param name="filename"></param>
         /// <param name="gitVersion"></param>
         private void Export_c(string folderpath, string filename, string gitVersion, EDSsharp eds)
-            {
+        {
 
             if (filename == "")
                 filename = "OD";
@@ -625,7 +626,7 @@ namespace libEDSsharp
 #error This Object dictionary is compatible with CANopenNode V4.0 and above!
 #endif", gitVersion, filename));
 
-    file.WriteLine(@"
+            file.WriteLine(@"
 /*******************************************************************************
     OD data initialization of all groups
 *******************************************************************************/");
@@ -765,6 +766,14 @@ OD_t *{0} = &_{0};", odname, string.Join(",\n    ", ODList)));
         {
             DataProperties data = new DataProperties();
             int nobase = 10;
+
+            //if it is a  number and default value is not set then 
+            //let's assume that it's zero
+            var isNumber = (dataType >= DataType.INTEGER8 && dataType <= DataType.REAL32) ||
+                    (dataType >= DataType.REAL64 && dataType <= DataType.UNSIGNED64);
+            if (isNumber && string.IsNullOrEmpty(defaultvalue))
+                defaultvalue = "0";
+             
             bool valueDefined = true;
             if (defaultvalue == null || defaultvalue == "")
                 valueDefined = false;
@@ -994,7 +1003,7 @@ OD_t *{0} = &_{0};", odname, string.Join(",\n    ", ODList)));
                                 Byte[] encodedBytes = unicode.GetBytes(defaultvalue);
                                 for (UInt32 i = 0; i < encodedBytes.Length; i += 2)
                                 {
-                                    UInt16 val = (ushort)(encodedBytes[i] | (UInt16)encodedBytes[i+1] << 8);
+                                    UInt16 val = (ushort)(encodedBytes[i] | (UInt16)encodedBytes[i + 1] << 8);
                                     words.Add(String.Format("0x{0:X4}", val));
                                     len++;
                                 }

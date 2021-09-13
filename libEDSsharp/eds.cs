@@ -2330,7 +2330,7 @@ namespace libEDSsharp
                     else
                     {
                         if (!kvp.Value.ContainsKey("SubNumber"))
-                            throw new ParameterException("Missing SubNumber on Array for" + section);
+                            throw new ParameterException("Missing SubNumber on Array for " + section);
 
 
 
