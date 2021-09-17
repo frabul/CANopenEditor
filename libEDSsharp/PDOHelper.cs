@@ -16,16 +16,17 @@ namespace libEDSsharp
         public ushort ConfigurationIndex
         {
             get { return _ConfigurationIndex; }
-            set {
+            set
+            {
 
-                if(value==0)
+                if (value == 0)
                 {
                     _ConfigurationIndex = 0;
                     _MappingIndex = 0;
                     return;
                 }
 
-                if ( ((value >= 0x1400) && (value < 0x1600)) || ((value >=0x1800) && (value <0x1a00)) )
+                if (((value >= 0x1400) && (value < 0x1600)) || ((value >= 0x1800) && (value < 0x1a00)))
                 {
                     _ConfigurationIndex = value; _MappingIndex = (UInt16)(_ConfigurationIndex + (UInt16)0x200);
                 }
@@ -33,8 +34,8 @@ namespace libEDSsharp
                 {
                     throw new ArgumentOutOfRangeException("Configuration Index", "Must be between 0x1400 and 0x17FF");
                 }
-                   
-                   
+
+
             }
         }
 
@@ -42,7 +43,7 @@ namespace libEDSsharp
         {
             get { return _MappingIndex; }
         }
-        
+
         public EDSsharp.AccessType mappingAccessType;
         public EDSsharp.AccessType configAccessType;
         public string mappingloc;
@@ -74,7 +75,7 @@ namespace libEDSsharp
                     COB = COB & 0x0FFFFFFF;
             }
         }
- 
+
         public List<ODentry> Mapping = new List<ODentry>();
 
         public UInt16 inhibit;
@@ -132,7 +133,7 @@ namespace libEDSsharp
         public void insertMapping(int ordinal, ODentry entry)
         {
             int size = 0;
-            foreach(ODentry e in Mapping)
+            foreach (ODentry e in Mapping)
             {
                 size += e.Sizeofdatatype();
             }
@@ -140,7 +141,7 @@ namespace libEDSsharp
             if (size + entry.Sizeofdatatype() > 64)
                 return;
 
-            Mapping.Insert(ordinal,entry);
+            Mapping.Insert(ordinal, entry);
         }
 
     }
@@ -161,8 +162,8 @@ namespace libEDSsharp
         public void build_PDOlists()
         {
             //List<ODentry> odl = new List<ODentry>();
-            build_PDOlist(0x1800,pdoslots);
-            build_PDOlist(0x1400,pdoslots);
+            build_PDOlist(0x1800, pdoslots);
+            build_PDOlist(0x1400, pdoslots);
 
         }
 
@@ -191,14 +192,14 @@ namespace libEDSsharp
 
                     if (od.Containssubindex(2))
                         slot.transmissiontype = EDSsharp.ConvertToByte(od.Getsubobject(2).defaultvalue);
-                    
+
                     if (od.Containssubindex(3))
                         slot.inhibit = EDSsharp.ConvertToUInt16(od.Getsubobject(3).defaultvalue);
 
                     if (od.Containssubindex(5))
                         slot.eventtimer = EDSsharp.ConvertToUInt16(od.Getsubobject(5).defaultvalue);
 
-                    if (od.Containssubindex(6))                  
+                    if (od.Containssubindex(6))
                         slot.syncstart = EDSsharp.ConvertToByte(od.Getsubobject(6).defaultvalue);
 
                     slot.ConfigurationIndex = idx;
@@ -212,7 +213,7 @@ namespace libEDSsharp
                     //Look at mappings
 
                     ODentry mapping = eds.Getobject((ushort)(idx + 0x200));
-                    if(mapping==null)
+                    if (mapping == null)
                     {
                         Console.WriteLine(string.Format("No mapping for index 0x{0:x4} should be at 0x{1:x4}", idx, idx + 0x200));
                         continue;
@@ -223,7 +224,7 @@ namespace libEDSsharp
                     slot.mappingAccessType = od.accesstype;
                     slot.mappingloc = od.prop.CO_storageGroup;
 
-                    for (ushort subindex= 1; subindex<= mapping.Getmaxsubindex();subindex++)
+                    for (ushort subindex = 1; subindex <= mapping.Getmaxsubindex(); subindex++)
                     {
                         ODentry sub = mapping.Getsubobject(subindex);
                         if (sub == null)
@@ -294,13 +295,13 @@ namespace libEDSsharp
         /// </summary>
         public void buildmappingsfromlists()
         {
-            for(ushort x=0x1400;x<0x1c00;x++)
+            for (ushort x = 0x1400; x < 0x1c00; x++)
             {
                 if (eds.ods.ContainsKey(x))
                     eds.ods.Remove(x);
             }
 
-            foreach(PDOSlot slot in pdoslots)
+            foreach (PDOSlot slot in pdoslots)
             {
 
                 ODentry config = new ODentry();
@@ -311,10 +312,11 @@ namespace libEDSsharp
                 ODentry sub = new ODentry("max sub-index", (ushort)slot.ConfigurationIndex, 0);
                 sub.defaultvalue = "3";
                 sub.datatype = DataType.UNSIGNED8;
-                sub.accesstype = EDSsharp.AccessType.ro;
-                config.addsubobject(0x00,sub);
+                sub.AccessSDO(AccessSDO.ro, AccessPDO.no);
+                config.addsubobject(0x00, sub);
 
-                config.accesstype = slot.configAccessType;
+                config.SetAccessType(slot.configAccessType, false);
+                sub.AccessSDO(AccessSDO.rw, AccessPDO.no);
                 config.prop.CO_storageGroup = slot.configloc;
 
 
@@ -328,37 +330,37 @@ namespace libEDSsharp
                     sub = new ODentry("COB-ID used by TPDO", (ushort)slot.ConfigurationIndex, 1);
                     sub.datatype = DataType.UNSIGNED32;
                     sub.defaultvalue = slot.COB.ToHexString();
-                    sub.accesstype = EDSsharp.AccessType.rw;
+                    sub.AccessSDO(AccessSDO.rw, AccessPDO.no);
                     config.addsubobject(0x01, sub);
 
                     sub = new ODentry("transmission type", (ushort)slot.ConfigurationIndex, 2);
                     sub.datatype = DataType.UNSIGNED8;
                     sub.defaultvalue = slot.transmissiontype.ToString();
-                    sub.accesstype = EDSsharp.AccessType.rw;
+                    sub.AccessSDO(AccessSDO.rw, AccessPDO.no);
                     config.addsubobject(0x02, sub);
 
                     sub = new ODentry("inhibit time", (ushort)slot.ConfigurationIndex, 3);
                     sub.datatype = DataType.UNSIGNED16;
                     sub.defaultvalue = slot.inhibit.ToString();
-                    sub.accesstype = EDSsharp.AccessType.rw;
+                    sub.AccessSDO(AccessSDO.rw, AccessPDO.no);
                     config.addsubobject(0x03, sub);
 
                     sub = new ODentry("compatibility entry", (ushort)slot.ConfigurationIndex, 4);
                     sub.datatype = DataType.UNSIGNED8;
                     sub.defaultvalue = "0";
-                    sub.accesstype = EDSsharp.AccessType.rw;
+                    sub.AccessSDO(AccessSDO.rw, AccessPDO.no);
                     config.addsubobject(0x04, sub);
 
                     sub = new ODentry("event timer", (ushort)slot.ConfigurationIndex, 5);
                     sub.datatype = DataType.UNSIGNED16;
                     sub.defaultvalue = slot.eventtimer.ToString();
-                    sub.accesstype = EDSsharp.AccessType.rw;
+                    sub.AccessSDO(AccessSDO.rw, AccessPDO.no);
                     config.addsubobject(0x05, sub);
 
                     sub = new ODentry("SYNC start value", (ushort)slot.ConfigurationIndex, 6);
                     sub.datatype = DataType.UNSIGNED8;
                     sub.defaultvalue = slot.syncstart.ToString(); ;
-                    sub.accesstype = EDSsharp.AccessType.rw;
+                    sub.AccessSDO(AccessSDO.rw, AccessPDO.no);
                     config.addsubobject(0x06, sub);
 
                 }
@@ -371,51 +373,51 @@ namespace libEDSsharp
                     sub = new ODentry("COB-ID used by RPDO", (ushort)slot.ConfigurationIndex, 1);
                     sub.datatype = DataType.UNSIGNED32;
                     sub.defaultvalue = slot.COB.ToHexString();
-                    sub.accesstype = EDSsharp.AccessType.rw;
+                    sub.SetAccessType(EDSsharp.AccessType.rw, false);
                     config.addsubobject(0x01, sub);
 
                     sub = new ODentry("transmission type", (ushort)slot.ConfigurationIndex, 2);
                     sub.datatype = DataType.UNSIGNED8;
                     sub.defaultvalue = slot.transmissiontype.ToString();
-                    sub.accesstype = EDSsharp.AccessType.rw;
+                    sub.SetAccessType(EDSsharp.AccessType.rw, false);
                     config.addsubobject(0x02, sub);
                 }
 
-                eds.ods.Add(slot.ConfigurationIndex,config);
+                eds.ods.Add(slot.ConfigurationIndex, config);
 
                 ODentry mapping = new ODentry();
                 mapping.Index = slot.MappingIndex;
                 mapping.datatype = DataType.PDO_MAPPING;
                 mapping.objecttype = ObjectType.REC;
 
-                if(slot.isTXPDO())
+                if (slot.isTXPDO())
                     mapping.parameter_name = "TPDO mapping parameter";
                 else
                     mapping.parameter_name = "RPDO mapping parameter";
 
-                mapping.prop.CO_storageGroup = slot.mappingloc;
-                mapping.accesstype = slot.mappingAccessType;
+                mapping.prop.CO_storageGroup = slot.mappingloc; 
+                mapping.SetAccessType(slot.mappingAccessType, false);
 
                 sub = new ODentry("Number of mapped objects", (ushort)slot.MappingIndex, 0);
                 sub.datatype = DataType.UNSIGNED8;
                 sub.defaultvalue = slot.Mapping.Count().ToString();
-                sub.accesstype = EDSsharp.AccessType.rw;
+                sub.SetAccessType(EDSsharp.AccessType.rw, false);
                 mapping.addsubobject(0x00, sub);
 
                 byte mappingcount = 1;
                 foreach (ODentry mapslot in slot.Mapping)
                 {
-                    sub = new ODentry(String.Format("Mapped object {0:x}",mappingcount), (ushort)slot.MappingIndex, mappingcount);
+                    sub = new ODentry(String.Format("Mapped object {0:x}", mappingcount), (ushort)slot.MappingIndex, mappingcount);
                     sub.datatype = DataType.UNSIGNED32;
                     sub.defaultvalue = string.Format("0x{0:x4}{1:x2}{2:x2}", mapslot.Index, mapslot.Subindex, mapslot.Sizeofdatatype());
-                    sub.accesstype = EDSsharp.AccessType.rw;
+                    sub.SetAccessType(EDSsharp.AccessType.rw, false);
                     mapping.addsubobject(mappingcount, sub);
 
                     mappingcount++;
 
                 }
-                eds.ods.Add(slot.MappingIndex,mapping);
-               
+                eds.ods.Add(slot.MappingIndex, mapping);
+
             }
         }
 
@@ -431,7 +433,7 @@ namespace libEDSsharp
             if (!isTxPdo && !isRxPdo)
                 return;
 
-            foreach(PDOSlot slot in pdoslots)
+            foreach (PDOSlot slot in pdoslots)
             {
                 if (slot.ConfigurationIndex == configindex)
                     return;
@@ -461,10 +463,10 @@ namespace libEDSsharp
             if (isTXPDO)
                 startindex = 0x1800;
 
-            for(UInt16 index = startindex; index<(startindex+0x200);index++)
+            for (UInt16 index = startindex; index < (startindex + 0x200); index++)
             {
                 bool found = false;
-                foreach(PDOSlot slot in pdoslots)
+                foreach (PDOSlot slot in pdoslots)
                 {
                     if (slot.ConfigurationIndex == index)
                     {
@@ -473,7 +475,7 @@ namespace libEDSsharp
                     }
                 }
 
-                if(found==false)
+                if (found == false)
                 {
                     return index;
                 }

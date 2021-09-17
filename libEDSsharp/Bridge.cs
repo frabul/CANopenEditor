@@ -69,7 +69,7 @@ namespace libEDSsharp
                         ODentry sub = od.Getsubobject(1);
                         if (sub != null)
                         {
-                            od.accesstype = sub.accesstype;
+                            od.SetAccessType(sub.accesstype, false);
                         }
                     }
 
@@ -232,8 +232,8 @@ namespace libEDSsharp
 
             dev.Other.File = new File();
 
-            dev.Other.File.FileName = System.IO.Path.GetFileName(eds.xmlfilename); 
-            
+            dev.Other.File.FileName = System.IO.Path.GetFileName(eds.xmlfilename);
+
             dev.Other.File.FileCreationDate = eds.fi.CreationDateTime.ToString("MM-dd-yyyy");
             dev.Other.File.FileCreationTime = eds.fi.CreationDateTime.ToString("h:mmtt");
             dev.Other.File.FileCreator = eds.fi.CreatedBy;
@@ -248,7 +248,7 @@ namespace libEDSsharp
             dev.Other.File.ExportFolder = eds.fi.exportFolder;
             dev.Other.File.EdsFile = eds.edsfilename;
             //fixme dcffilename
-          
+
 
             return dev;
         }
@@ -286,7 +286,8 @@ namespace libEDSsharp
                     Regex reg = new Regex(@"^cons$");
                     at = reg.Replace(at, "const");
 
-                    entry.accesstype = (EDSsharp.AccessType)Enum.Parse(typeof(EDSsharp.AccessType), at);
+                    var accesstype = (EDSsharp.AccessType)Enum.Parse(typeof(EDSsharp.AccessType), at);
+                    entry.SetAccessType(accesstype, false);
                 }
 
                 if (coo.DataType != null)
@@ -330,11 +331,10 @@ namespace libEDSsharp
                 entry.HighLimit = coo.HighValue;
                 entry.LowLimit = coo.LowValue;
                 //entry.nosubindexes = Convert.ToInt16(coo.SubNumber);
-
+                PDOMappingType pdoMapping = PDOMappingType.no;
                 if (coo.PDOmapping != null)
-                    entry.PDOtype = (PDOMappingType)Enum.Parse(typeof(PDOMappingType), coo.PDOmapping);
-                else
-                    entry.PDOtype = PDOMappingType.no;
+                    pdoMapping = (PDOMappingType)Enum.Parse(typeof(PDOMappingType), coo.PDOmapping);
+                entry.SetAccessType(entry.accesstype, pdoMapping > PDOMappingType.no);
 
                 entry.prop.CO_flagsPDO = coo.TPDOdetectCOS == "true";
                 entry.prop.CO_disabled = coo.Disabled == "true";
@@ -376,8 +376,22 @@ namespace libEDSsharp
                     subentry.parameter_name = coosub.Name;
                     subentry.Index = entry.Index;
 
+
+                    PDOMappingType subPdoMap = PDOMappingType.no;
+                    if (entry.objecttype == ObjectType.ARRAY)
+                    {
+                        pdoMapping = entry.PDOtype;
+                    }
+                    else
+                    {
+                        if (coosub.PDOmapping != null)
+                            subPdoMap = (PDOMappingType)Enum.Parse(typeof(PDOMappingType), coosub.PDOmapping);
+                    }
+
                     if (coosub.AccessType != null)
-                        subentry.accesstype = (EDSsharp.AccessType)Enum.Parse(typeof(EDSsharp.AccessType), coosub.AccessType);
+                        subentry.SetAccessType(
+                            (EDSsharp.AccessType)Enum.Parse(typeof(EDSsharp.AccessType), coosub.AccessType),
+                            subPdoMap);
 
                     if (coosub.DataType != null)
                     {
@@ -394,13 +408,6 @@ namespace libEDSsharp
 
                     byte subindex = Convert.ToByte(coosub.SubIndex, 16);
 
-                    if (coosub.PDOmapping != null)
-                        subentry.PDOtype = (PDOMappingType)Enum.Parse(typeof(PDOMappingType), coosub.PDOmapping);
-
-                    if (entry.objecttype == ObjectType.ARRAY)
-                    {
-                        subentry.PDOtype = entry.PDOtype;
-                    }
 
                     subentry.prop.CO_storageGroup = entry.prop.CO_storageGroup;
                     subentry.parent = entry;
@@ -563,7 +570,7 @@ namespace libEDSsharp
         }
 
 
-       
+
     }
 
 }

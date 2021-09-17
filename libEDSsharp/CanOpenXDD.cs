@@ -51,7 +51,7 @@ namespace libEDSsharp
 
         }
 
-        public List<EDSsharp> readMultiXML(string file )
+        public List<EDSsharp> readMultiXML(string file)
         {
 
             List<EDSsharp> edss = new List<EDSsharp>();
@@ -62,7 +62,7 @@ namespace libEDSsharp
                 StreamReader reader = new StreamReader(file);
                 OpenEDSProject oep = (OpenEDSProject)serializer.Deserialize(reader);
 
-                foreach(ISO15745ProfileContainer cont in oep.ISO15745ProfileContainer)
+                foreach (ISO15745ProfileContainer cont in oep.ISO15745ProfileContainer)
                 {
                     edss.Add(convert(cont));
                 }
@@ -75,7 +75,7 @@ namespace libEDSsharp
             {
                 Console.WriteLine(e.ToString());
                 return null;
-            }    
+            }
         }
 
         public void writeMultiXML(string file, List<EDSsharp> edss)
@@ -172,7 +172,7 @@ namespace libEDSsharp
             denot.Items = new object[1];
             denot.Items[0] = lab2;
             p.denotation = denot;
-            
+
 
             vendorTextDescription desc = new vendorTextDescription();
             desc.lang = "en"; //fixme we could and should do better than just English
@@ -188,7 +188,7 @@ namespace libEDSsharp
         public ISO15745ProfileContainer convert(EDSsharp eds)
         {
             dev = new ISO15745ProfileContainer();
-            
+
             dev.ISO15745Profile = new ISO15745Profile[2];
 
 
@@ -231,7 +231,7 @@ namespace libEDSsharp
             device.fileCreationDate = eds.fi.CreationDateTime;
             device.fileCreationTime = eds.fi.CreationDateTime;
             device.fileCreationTimeSpecified = true;
-            
+
             device.fileModificationDate = eds.fi.ModificationDateTime;
             device.fileModificationTime = eds.fi.ModificationDateTime;
             device.fileModificationDateSpecified = true;
@@ -245,7 +245,7 @@ namespace libEDSsharp
             device.fileVersion = eds.fi.FileVersion;
 
             device.fileName = Path.GetFileName(eds.projectFilename);
-            
+
 
             //device.DeviceIdentity.vendorText
             //device.DeviceIdentity.deviceFamily
@@ -266,7 +266,7 @@ namespace libEDSsharp
             vendorTextDescription des = new vendorTextDescription();
             des.lang = "en";
 
-            des.Value = String.Format("FileDescription={0}|EdsVersion={1}|FileRevision={2}|RevisionNum={3}",eds.fi.Description,eds.fi.EDSVersion,eds.fi.FileVersion,eds.fi.FileRevision);
+            des.Value = String.Format("FileDescription={0}|EdsVersion={1}|FileRevision={2}|RevisionNum={3}", eds.fi.Description, eds.fi.EDSVersion, eds.fi.FileVersion, eds.fi.FileRevision);
 
             device.DeviceIdentity.productText.Items[0] = des;
             device.DeviceIdentity.productText.readOnly = true;
@@ -397,9 +397,9 @@ namespace libEDSsharp
 
 
             AppLayer.CANopenObjectList.CANopenObject = new CANopenObjectListCANopenObject[eds.GetNoEnabledObjects()];
-            
+
             int count = 0;
-            foreach (KeyValuePair<UInt16,ODentry> kvp in eds.ods)
+            foreach (KeyValuePair<UInt16, ODentry> kvp in eds.ods)
             {
                 ODentry od = kvp.Value;
                 UInt16 subindex = kvp.Key;
@@ -423,19 +423,23 @@ namespace libEDSsharp
                 // https://github.com/robincornelius/libedssharp/issues/128
                 EDSsharp.AccessType accesstype = od.accesstype;
                 PDOMappingType PDOtype = od.PDOtype;
-                if (accesstype == EDSsharp.AccessType.rww) {
+                if (accesstype == EDSsharp.AccessType.rww)
+                {
                     accesstype = EDSsharp.AccessType.rw;
 
                     // when optional, set it to the corresponding type
-                    if (PDOtype == PDOMappingType.optional) {
+                    if (PDOtype == PDOMappingType.optional)
+                    {
                         PDOtype = PDOMappingType.RPDO;
                     }
                 }
-                if (accesstype == EDSsharp.AccessType.rwr) {
+                if (accesstype == EDSsharp.AccessType.rwr)
+                {
                     accesstype = EDSsharp.AccessType.rw;
 
                     // when optional, set it to the corresponding type
-                    if (PDOtype == PDOMappingType.optional) {
+                    if (PDOtype == PDOMappingType.optional)
+                    {
                         PDOtype = PDOMappingType.TPDO;
                     }
                 }
@@ -455,7 +459,7 @@ namespace libEDSsharp
                     AppLayer.CANopenObjectList.CANopenObject[count].accessTypeSpecified = false;
                 }
 
-                AppLayer.CANopenObjectList.CANopenObject[count].PDOmapping = (CANopenObjectListCANopenObjectPDOmapping)Enum.Parse(typeof(CANopenObjectListCANopenObjectPDOmapping),PDOtype.ToString());
+                AppLayer.CANopenObjectList.CANopenObject[count].PDOmapping = (CANopenObjectListCANopenObjectPDOmapping)Enum.Parse(typeof(CANopenObjectListCANopenObjectPDOmapping), PDOtype.ToString());
                 AppLayer.CANopenObjectList.CANopenObject[count].PDOmappingSpecified = true;
 
                 AppLayer.CANopenObjectList.CANopenObject[count].uniqueIDRef = String.Format("UID_PARAM_{0:x4}", od.Index);
@@ -478,7 +482,7 @@ namespace libEDSsharp
 
                     int subcount = 0;
 
-                    foreach ( KeyValuePair<UInt16,ODentry> kvp2 in od.subobjects)
+                    foreach (KeyValuePair<UInt16, ODentry> kvp2 in od.subobjects)
                     {
                         ODentry subod = kvp2.Value;
                         UInt16 subindex2 = kvp2.Key;
@@ -506,24 +510,28 @@ namespace libEDSsharp
                         // https://github.com/robincornelius/libedssharp/issues/128
                         accesstype = subod.accesstype;
                         PDOtype = subod.PDOtype;
-                        if (accesstype == EDSsharp.AccessType.rww) {
+                        if (accesstype == EDSsharp.AccessType.rww)
+                        {
                             accesstype = EDSsharp.AccessType.rw;
 
                             // when optional is set, 
-                            if (PDOtype == PDOMappingType.optional) {
+                            if (PDOtype == PDOMappingType.optional)
+                            {
                                 PDOtype = PDOMappingType.RPDO;
                             }
                         }
-                        if (accesstype == EDSsharp.AccessType.rwr) {
+                        if (accesstype == EDSsharp.AccessType.rwr)
+                        {
                             accesstype = EDSsharp.AccessType.rw;
 
                             // when optional is set, 
-                            if (PDOtype == PDOMappingType.optional) {
+                            if (PDOtype == PDOMappingType.optional)
+                            {
                                 PDOtype = PDOMappingType.TPDO;
                             }
                         }
                         AppLayer.CANopenObjectList.CANopenObject[count].CANopenSubObject[subcount].dataType = bytes;
-                        AppLayer.CANopenObjectList.CANopenObject[count].CANopenSubObject[subcount].PDOmapping = (CANopenObjectListCANopenObjectCANopenSubObjectPDOmapping)Enum.Parse(typeof(CANopenObjectListCANopenObjectCANopenSubObjectPDOmapping),PDOtype.ToString());
+                        AppLayer.CANopenObjectList.CANopenObject[count].CANopenSubObject[subcount].PDOmapping = (CANopenObjectListCANopenObjectCANopenSubObjectPDOmapping)Enum.Parse(typeof(CANopenObjectListCANopenObjectCANopenSubObjectPDOmapping), PDOtype.ToString());
                         AppLayer.CANopenObjectList.CANopenObject[count].CANopenSubObject[subcount].PDOmappingSpecified = true;
                         AppLayer.CANopenObjectList.CANopenObject[count].CANopenSubObject[subcount].uniqueIDRef = String.Format("UID_PARAM_{0:x4}{1:x2}", od.Index, subindex2);
                         AppLayer.CANopenObjectList.CANopenObject[count].CANopenSubObject[subcount].accessType = (CANopenObjectListCANopenObjectCANopenSubObjectAccessType)Enum.Parse(typeof(CANopenObjectListCANopenObjectCANopenSubObjectAccessType), accesstype.ToString());
@@ -682,8 +690,8 @@ namespace libEDSsharp
 
             //Find Object Dictionary entries
 
-           //fixme??
-           // ProfileBody_DataType dt;
+            //fixme??
+            // ProfileBody_DataType dt;
 
 
             ProfileBody_CommunicationNetwork_CANopen body_network = null;
@@ -838,7 +846,7 @@ namespace libEDSsharp
 
                 if (TransportLayers != null)
                 {
-                    if(TransportLayers.PhysicalLayer!=null)
+                    if (TransportLayers.PhysicalLayer != null)
                     {
                         if (TransportLayers.PhysicalLayer.baudRate != null)
                         {
@@ -981,7 +989,7 @@ namespace libEDSsharp
                         if (obj3.edseditor_extension_notifyonchange)
                             entry.prop.CO_flagsPDO = obj3.edseditor_extension_notifyonchange;
 
-                            
+
 
                         //FIXME im not sure this is correct
                         if (obj3.objFlags != null)
@@ -989,39 +997,18 @@ namespace libEDSsharp
 
                         entry.uniqueID = obj3.uniqueIDRef;
 
-                        // https://github.com/robincornelius/libedssharp/issues/128
-                        // Mapping of accesstype and pdo mappings have changed between EDS and XDD
-                        // in EDS we have rw,wo, r and const which are the same in both standards, but EDS also
-                        // has rww and rwr which are rw objects that can also be mapped to RPDOs (rww) or
-                        // TPDOs (rwr) 
+
+                        PDOMappingType pdoMapping = PDOMappingType.no;
+                        if (obj3.PDOmappingSpecified)
+                            pdoMapping = (PDOMappingType)Enum.Parse(typeof(PDOMappingType), obj3.PDOmapping.ToString());
 
                         if (obj3.accessTypeSpecified)
                         {
-                            entry.accesstype = (EDSsharp.AccessType)Enum.Parse(typeof(EDSsharp.AccessType), obj3.accessType.ToString());
+                            entry.SetAccessType(EDSsharp.AccessType.ro, pdoMapping > PDOMappingType.no);
                         }
                         else
                         {
-                            entry.accesstype = EDSsharp.AccessType.ro; //fixme sensible default required here??    
-                        }
-
-                        if(obj3.PDOmappingSpecified)
-                        {
-
-                            entry.PDOtype = (PDOMappingType)Enum.Parse(typeof(PDOMappingType), obj3.PDOmapping.ToString());
-
-                            if (entry.accesstype == EDSsharp.AccessType.rw && entry.PDOtype == PDOMappingType.RPDO)
-                            {
-                                entry.accesstype = EDSsharp.AccessType.rww;
-                            }
-
-                            if (entry.accesstype == EDSsharp.AccessType.rw && entry.PDOtype == PDOMappingType.TPDO)
-                            {
-                                entry.accesstype = EDSsharp.AccessType.rwr;
-                            }
-                        }
-                        else
-                        {
-                            entry.PDOtype = PDOMappingType.no; //fixme should this be @default??
+                            entry.SetAccessType(EDSsharp.AccessType.ro, pdoMapping > PDOMappingType.no);
                         }
 
                         eds.ods.Add(index, entry);
@@ -1045,7 +1032,7 @@ namespace libEDSsharp
                                 }
 
 
-                       
+
                                 // https://github.com/robincornelius/libedssharp/issues/128
                                 // Mapping of accesstype and pdo mappings have changed between EDS and XDD
                                 // in EDS we have rw,wo, r and const which are the same in both standards, but EDS also
@@ -1061,13 +1048,13 @@ namespace libEDSsharp
                                 {
                                     accesstype = entry.accesstype;
                                 }
-                           
+
                                 if (subobj.PDOmappingSpecified == true)
                                 {
 
                                     pdotype = (PDOMappingType)Enum.Parse(typeof(PDOMappingType), subobj.PDOmapping.ToString());
 
-                                    if(accesstype == EDSsharp.AccessType.rw && pdotype == PDOMappingType.RPDO)
+                                    if (accesstype == EDSsharp.AccessType.rw && pdotype == PDOMappingType.RPDO)
                                     {
                                         accesstype = EDSsharp.AccessType.rww;
                                     }
@@ -1091,19 +1078,19 @@ namespace libEDSsharp
 
                                 subentry.prop.CO_flagsPDO = subobj.edseditor_extension_notifyonchange;
 
-                                if (subobj.lowLimit!=null)
+                                if (subobj.lowLimit != null)
                                     subentry.LowLimit = subobj.lowLimit;
 
-                                if(subobj.highLimit!=null)
+                                if (subobj.highLimit != null)
                                     subentry.HighLimit = subobj.highLimit;
 
-                                if(subobj.actualValue!=null)
+                                if (subobj.actualValue != null)
                                     subentry.actualvalue = subobj.actualValue;
 
-                                if(subobj.denotation!=null)
+                                if (subobj.denotation != null)
                                     subentry.denotation = subobj.denotation;
 
-                                if(subobj.objFlags!=null)
+                                if (subobj.objFlags != null)
                                     subentry.ObjFlags = subobj.objFlags[0];
 
 
@@ -1120,7 +1107,7 @@ namespace libEDSsharp
                         }
 
 
-                }
+                    }
 
             }
 
@@ -1147,12 +1134,12 @@ namespace libEDSsharp
                             String desc = ((vendorTextDescription)o).Value;
                             string[] bits = desc.Split('|');
 
-                            foreach(string bit in bits)
+                            foreach (string bit in bits)
                             {
                                 string[] keyvalue = bit.Split('=');
-                                if(keyvalue.Length==2)
+                                if (keyvalue.Length == 2)
                                 {
-                                    switch(keyvalue[0])
+                                    switch (keyvalue[0])
                                     {
                                         case "FileDescription":
                                             eds.fi.Description = keyvalue[1];
@@ -1164,9 +1151,9 @@ namespace libEDSsharp
                                             eds.fi.FileVersion = keyvalue[1];
                                             break;
                                         case "RevisionNum":
-                                            byte.TryParse(keyvalue[1], out eds.fi.FileRevision);                                            break;
+                                            byte.TryParse(keyvalue[1], out eds.fi.FileRevision); break;
 
-                                                
+
                                     }
                                 }
                             }
@@ -1237,11 +1224,11 @@ namespace libEDSsharp
 
                             //fix me, if more than one vendorTextDescription is present, eg
                             //multi language this will result in the last one being used
-                            if (param.Items!=null && param.Items.Length>0)
+                            if (param.Items != null && param.Items.Length > 0)
                             {
-                                foreach(object item in param.Items)
+                                foreach (object item in param.Items)
                                 {
-                                    if(item.GetType() == typeof(vendorTextDescription))
+                                    if (item.GetType() == typeof(vendorTextDescription))
                                     {
                                         vendorTextDescription vtd = (vendorTextDescription)item;
                                         od.Description = vtd.Value;
@@ -1253,7 +1240,7 @@ namespace libEDSsharp
 
                             //FIXME: if we have a denotation set for an object in the <parameterList> section but it is not set on the object
                             //use the <parameterList> one. We may discover that this is used for something else and can be removed??
-                            if ((od.denotation==null || od.denotation=="") && param.denotation!=null && param.denotation.Items.Length>0)
+                            if ((od.denotation == null || od.denotation == "") && param.denotation != null && param.denotation.Items.Length > 0)
                             {
                                 foreach (object item in param.denotation.Items)
                                 {
@@ -3064,7 +3051,7 @@ namespace CanOpenXSD_1_0
             }
         }
 
-      
+
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]

@@ -29,7 +29,7 @@ using CanOpenXSD_1_1;
 namespace libEDSsharp
 {
 
-   
+
     public enum DataType
     {
         UNKNOWN = 0,
@@ -60,7 +60,7 @@ namespace libEDSsharp
         UNSIGNED64 = 0x1B,
 
         PDO_COMMUNICATION_PARAMETER = 0x20,  //PDO_CommPar
-        PDO_MAPPING  = 0x21, //PDO_Mapping
+        PDO_MAPPING = 0x21, //PDO_Mapping
         SDO_PARAMETER = 0x22,
         IDENTITY = 0x23,
 
@@ -70,9 +70,9 @@ namespace libEDSsharp
     {
         UNKNOWN = -1,
         NULL = 0,
-        DOMAIN =2,
-        DEFTYPE=5,
-        DEFSTRUCT=6,
+        DOMAIN = 2,
+        DEFTYPE = 5,
+        DEFSTRUCT = 6,
         VAR = 7,
         ARRAY = 8,
         REC = 9,
@@ -80,11 +80,11 @@ namespace libEDSsharp
 
     public enum PDOMappingType
     {
-        no=0,
-        optional=1,
-        RPDO=2,
-        TPDO=3,
-        @default=4,
+        no = 0,
+        optional = 1,
+        RPDO = 2,
+        TPDO = 3,
+        @default = 4,
     }
 
     public enum AccessSDO
@@ -212,7 +212,7 @@ namespace libEDSsharp
     public class EdsExport : Attribute
     {
         public UInt16 maxlength;
-        public bool commentonly=false;
+        public bool commentonly = false;
 
         //mehmeh
         public EdsExport()
@@ -229,7 +229,7 @@ namespace libEDSsharp
             return commentonly;
         }
 
-      
+
     }
 
     public class DcfExport : EdsExport
@@ -249,7 +249,7 @@ namespace libEDSsharp
             File_DCF
         }
 
-        public virtual void Parse(Dictionary<string, string> section,string sectionname)
+        public virtual void Parse(Dictionary<string, string> section, string sectionname)
         {
 
             this.section = section;
@@ -258,7 +258,7 @@ namespace libEDSsharp
 
             foreach (FieldInfo f in fields)
             {
-                if(Attribute.IsDefined(f, typeof(EdsExport)))
+                if (Attribute.IsDefined(f, typeof(EdsExport)))
                     GetField(f.Name, f.Name);
 
                 if (Attribute.IsDefined(f, typeof(DcfExport)))
@@ -271,7 +271,7 @@ namespace libEDSsharp
         {
             FieldInfo f = null;
 
-            try 
+            try
             {
                 foreach (var element in section)
                 {
@@ -362,7 +362,7 @@ namespace libEDSsharp
             foreach (FieldInfo f in fields)
             {
 
-                if ((ft==Filetype.File_EDS) && (!Attribute.IsDefined(f, typeof(EdsExport))))
+                if ((ft == Filetype.File_EDS) && (!Attribute.IsDefined(f, typeof(EdsExport))))
                     continue;
 
                 if ((ft == Filetype.File_DCF) && (!(Attribute.IsDefined(f, typeof(DcfExport)) || Attribute.IsDefined(f, typeof(EdsExport)))))
@@ -377,7 +377,7 @@ namespace libEDSsharp
 
                 if (f.FieldType.Name == "Boolean")
                 {
-                    writer.WriteLine(string.Format("{2}{0}={1}", f.Name, ((bool)f.GetValue(this)) == true ? 1 : 0,comment==true?";":""));
+                    writer.WriteLine(string.Format("{2}{0}={1}", f.Name, ((bool)f.GetValue(this)) == true ? 1 : 0, comment == true ? ";" : ""));
                 }
                 else
                 {
@@ -388,24 +388,24 @@ namespace libEDSsharp
             writer.WriteLine("");
 
         }
-       
+
     }
 
- 
+
     public class MandatoryObjects : SupportedObjects
     {
         public MandatoryObjects()
             : base()
-         {
-              infoheader = "Mandatory Objects";
-              edssection = "MandatoryObjects";
-         }
+        {
+            infoheader = "Mandatory Objects";
+            edssection = "MandatoryObjects";
+        }
 
-         public MandatoryObjects(Dictionary<string, string> section)
-             : this()
-         {
-             Parse(section);
-         }
+        public MandatoryObjects(Dictionary<string, string> section)
+            : this()
+        {
+            Parse(section);
+        }
     }
 
     public class OptionalObjects : SupportedObjects
@@ -440,7 +440,7 @@ namespace libEDSsharp
     }
 
     public class TypeDefinitions : SupportedObjects
-    {   
+    {
         public TypeDefinitions() : base()
         {
             infoheader = "Type Definitions";
@@ -470,9 +470,9 @@ namespace libEDSsharp
         public virtual void Parse(Dictionary<string, string> section)
         {
             objectlist = new Dictionary<int, int>();
-            foreach(KeyValuePair<string,string> kvp in section)
+            foreach (KeyValuePair<string, string> kvp in section)
             {
-                if(kvp.Key.ToLower()=="supportedobjects")
+                if (kvp.Key.ToLower() == "supportedobjects")
                     continue;
 
                 if (kvp.Key.ToLower() == "nrofentries")
@@ -492,7 +492,7 @@ namespace libEDSsharp
             msg += $"*{String.Format("{0," + ((51 + infoheader.Length) / 2).ToString() + "}", infoheader),-51}*{Environment.NewLine}";
             msg += $"*****************************************************{Environment.NewLine}";
             msg += $"}}{Environment.NewLine}{countmsg} = {objectlist.Count}{Environment.NewLine}";
-            foreach(KeyValuePair<int,int> kvp in objectlist)
+            foreach (KeyValuePair<int, int> kvp in objectlist)
             {
                 msg += $"{kvp.Key,-5}: {kvp.Value:x4}{Environment.NewLine}";
             }
@@ -504,7 +504,7 @@ namespace libEDSsharp
         public void Write(StreamWriter writer)
         {
             writer.WriteLine("[" + edssection + "]");
-            writer.WriteLine(string.Format("{0}={1}", countmsg,objectlist.Count));
+            writer.WriteLine(string.Format("{0}={1}", countmsg, objectlist.Count));
             foreach (KeyValuePair<int, int> kvp in objectlist)
             {
                 writer.WriteLine(string.Format("{0}=0x{1:X4}", kvp.Key, kvp.Value));
@@ -524,10 +524,10 @@ namespace libEDSsharp
 
         public Comments()
         {
-           
+
         }
 
-        public Comments(Dictionary<string, string> section) 
+        public Comments(Dictionary<string, string> section)
         {
             Parse(section);
         }
@@ -564,7 +564,7 @@ namespace libEDSsharp
 
         public void Write(StreamWriter writer)
         {
-            if(comments == null)
+            if (comments == null)
             {
                 comments = new List<string>();
             }
@@ -581,7 +581,7 @@ namespace libEDSsharp
             }
 
             writer.WriteLine("");
-        }   
+        }
     }
 
 
@@ -602,16 +602,16 @@ namespace libEDSsharp
         [EdsExport]
         public bool Dummy0007;
 
- 
+
         public Dummyusage()
         {
-             infoheader = "CAN OPEN Dummy Usage";
-             edssection = "DummyUsage";
+            infoheader = "CAN OPEN Dummy Usage";
+            edssection = "DummyUsage";
         }
 
         public Dummyusage(Dictionary<string, string> section) : this()
         {
-            Parse(section,edssection);
+            Parse(section, edssection);
         }
     }
 
@@ -619,9 +619,9 @@ namespace libEDSsharp
     {
         // Only for internal usage, use Path.GetFileName(eds.projectFilename) instead.
         [EdsExport]
-        public string FileName="";
+        public string FileName = "";
         [EdsExport]
-        public string FileVersion="";
+        public string FileVersion = "";
         [EdsExport]
         public byte FileRevision;//=1
 
@@ -629,32 +629,32 @@ namespace libEDSsharp
         public string LastEDS = "";
 
         public byte EDSVersionMajor;//=4.0
-        
+
         public byte EDSVersionMinor;//=4.0
         [EdsExport]
-        public string EDSVersion="";
+        public string EDSVersion = "";
 
-        [EdsExport(maxlength=243)]
-        public string Description="";//= //max 243 characters
+        [EdsExport(maxlength = 243)]
+        public string Description = "";//= //max 243 characters
 
         public DateTime CreationDateTime;//
         [EdsExport]
-        public string CreationTime="";
+        public string CreationTime = "";
         [EdsExport]
-        public string CreationDate="";
+        public string CreationDate = "";
 
         [EdsExport(maxlength = 245)]
         public string CreatedBy = "";//=CANFestival //max245
-        
+
         public DateTime ModificationDateTime;//
 
         [EdsExport]
-        public string ModificationTime="";
+        public string ModificationTime = "";
         [EdsExport]
-        public string ModificationDate="";
+        public string ModificationDate = "";
 
         [EdsExport(maxlength = 244)]
-        public string ModifiedBy="";//=CANFestival //max244
+        public string ModifiedBy = "";//=CANFestival //max244
 
         //Folder CO_OD.c and CO_OD.h will be exported into
         public string exportFolder = "";
@@ -662,7 +662,7 @@ namespace libEDSsharp
 
         public FileInfo(Dictionary<string, string> section) : this()
         {
-            Parse(section,edssection);
+            Parse(section, edssection);
         }
 
         public FileInfo()
@@ -675,22 +675,22 @@ namespace libEDSsharp
         override public void Parse(Dictionary<string, string> section, string sectionname)
         {
 
-            base.Parse(section,edssection);
+            base.Parse(section, edssection);
 
             string dtcombined = "";
             try
             {
                 if (section.ContainsKey("CreationTime") && section.ContainsKey("CreationDate"))
                 {
-                    dtcombined = section["CreationTime"].Replace(" ","") + " " + section["CreationDate"];
+                    dtcombined = section["CreationTime"].Replace(" ", "") + " " + section["CreationDate"];
                     CreationDateTime = DateTime.ParseExact(dtcombined, "h:mmtt MM-dd-yyyy", CultureInfo.InvariantCulture);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 if (e is System.FormatException)
                 {
-                    Warnings.warning_list.Add(String.Format("EDS Error: Section [{1}] Unable to parse DateTime {0} for CreationTime, not in DS306 format", dtcombined,sectionname));
+                    Warnings.warning_list.Add(String.Format("EDS Error: Section [{1}] Unable to parse DateTime {0} for CreationTime, not in DS306 format", dtcombined, sectionname));
                 }
             }
 
@@ -735,14 +735,14 @@ namespace libEDSsharp
     {
 
         [EdsExport]
-        public string VendorName="";
+        public string VendorName = "";
         [EdsExport]
-        public string VendorNumber="";
+        public string VendorNumber = "";
 
         [EdsExport]
-        public string ProductName="";
+        public string ProductName = "";
         [EdsExport]
-        public string ProductNumber="";
+        public string ProductNumber = "";
         [EdsExport]
         public UInt32 RevisionNumber;
 
@@ -800,7 +800,7 @@ namespace libEDSsharp
 
         public DeviceInfo(Dictionary<string, string> section) : this()
         {
-            Parse(section,edssection);
+            Parse(section, edssection);
         }
     }
 
@@ -816,7 +816,7 @@ namespace libEDSsharp
 
         public DeviceCommissioning(Dictionary<string, string> section) : this()
         {
-            Parse(section,edssection);
+            Parse(section, edssection);
         }
 
         [DcfExport]
@@ -855,10 +855,10 @@ namespace libEDSsharp
 
         public SupportedModules(Dictionary<string, string> section) : this()
         {
-            Parse(section,edssection);
+            Parse(section, edssection);
         }
 
-       
+
     }
 
     public class ConnectedModules : SupportedObjects
@@ -866,7 +866,7 @@ namespace libEDSsharp
         [EdsExport]
         public UInt16 NrOfEntries
         {
-            get {  return (UInt16)connectedmodulelist.Count;  }
+            get { return (UInt16)connectedmodulelist.Count; }
         }
 
         public Dictionary<int, int> connectedmodulelist;
@@ -883,8 +883,8 @@ namespace libEDSsharp
         {
             Parse(section);
 
-            
-            foreach(KeyValuePair<int,int> kvp in this.objectlist)
+
+            foreach (KeyValuePair<int, int> kvp in this.objectlist)
             {
 
 
@@ -897,7 +897,7 @@ namespace libEDSsharp
             }
 
         }
-     
+
     }
 
     public class MxFixedObjects : SupportedObjects
@@ -915,7 +915,7 @@ namespace libEDSsharp
         public int Moduleindex
         {
             get { return _moduleindex; }
-            set { _moduleindex = value; edssection = String.Format("M{0}FixedObjects",value); }
+            set { _moduleindex = value; edssection = String.Format("M{0}FixedObjects", value); }
         }
 
         public MxFixedObjects(UInt16 modindex)
@@ -963,9 +963,9 @@ namespace libEDSsharp
             edssection = string.Format("M{0}{1}", moduleindex, "ModuleInfo");
         }
 
-        public ModuleInfo(Dictionary<string, string> section, UInt16 moduleindex) : this (moduleindex)
+        public ModuleInfo(Dictionary<string, string> section, UInt16 moduleindex) : this(moduleindex)
         {
-            Parse(section,edssection);
+            Parse(section, edssection);
         }
     }
 
@@ -982,7 +982,7 @@ namespace libEDSsharp
             edssection = string.Format("M{0}{1}", moduleindex, "Comments");
         }
 
-        public ModuleComments(Dictionary<string, string> section,UInt16 moduleindex) : this (moduleindex)
+        public ModuleComments(Dictionary<string, string> section, UInt16 moduleindex) : this(moduleindex)
         {
             Parse(section);
         }
@@ -999,7 +999,7 @@ namespace libEDSsharp
               : base()
         {
             this.moduleindex = moduleindex;
-            infoheader = "CAN OPEN ModuleSubExtends "+moduleindex.ToString();
+            infoheader = "CAN OPEN ModuleSubExtends " + moduleindex.ToString();
             edssection = string.Format("M{0}{1}", moduleindex, "SubExtends");
         }
 
@@ -1031,13 +1031,13 @@ namespace libEDSsharp
             }
             set
             {
-                if(value==0)
+                if (value == 0)
                 {
 
                     //throw (new Exception("Object index must be set"));
                 }
 
-                if(parent == null)
+                if (parent == null)
                 {
                     _index = value;
                 }
@@ -1046,7 +1046,7 @@ namespace libEDSsharp
 
                     //throw (new Exception("Typing to set index of a subobject"));
                 }
-               
+
             }
         }
 
@@ -1061,7 +1061,7 @@ namespace libEDSsharp
         [EdsExport]
         public DataType datatype = DataType.UNKNOWN;
         [EdsExport]
-        public EDSsharp.AccessType accesstype = EDSsharp.AccessType.UNKNOWN;
+        public EDSsharp.AccessType accesstype { get; private set; } = EDSsharp.AccessType.UNKNOWN;
 
         [EdsExport]
         public string defaultvalue = "";
@@ -1100,8 +1100,10 @@ namespace libEDSsharp
 
         [EdsExport]
         public byte ObjExtend = 0;
-
-        public PDOMappingType PDOtype = PDOMappingType.no;
+        /// <summary>
+        /// Use SetAccessType to modify this
+        /// </summary>
+        public PDOMappingType PDOtype { get; private set; } = PDOMappingType.no;
 
         public string Label = "";
         public string Description = "";
@@ -1141,7 +1143,7 @@ namespace libEDSsharp
         /// <param name="defaultvalue">Default value (always set as a string)</param>
         /// <param name="accesstype">Allowed CANopen access permissions</param>
         /// <param name="PDOMapping">Allowed PDO mapping options</param>
-        public ODentry(string parameter_name,UInt16 index, DataType datatype, string defaultvalue, EDSsharp.AccessType accesstype, PDOMappingType PDOMapping)
+        public ODentry(string parameter_name, UInt16 index, DataType datatype, string defaultvalue, EDSsharp.AccessType accesstype, PDOMappingType PDOMapping)
         {
             this.parameter_name = parameter_name;
             this.Index = index;
@@ -1151,25 +1153,22 @@ namespace libEDSsharp
 
 
             if (accesstype >= EDSsharp.AccessType_Min && accesstype <= EDSsharp.AccessType_Max)
-                this.accesstype = accesstype;
+                this.SetAccessType(accesstype, PDOMapping > PDOMappingType.no);
             else
-                throw new ParameterException("AccessType invalid");
-
-            this.PDOtype = PDOMapping;
-
+                throw new ParameterException("AccessType invalid");  
         }
-
-         /// <summary>
-         /// ODConstructor useful for subobjects
-         /// </summary>
-         /// <param name="parameter_name"></param>
-         /// <param name="index">NOT USED</param>
-         /// <param name="datatype"></param>
-         /// <param name="defaultvalue"></param>
-         /// <param name="accesstype"></param>
-         /// <param name="PDOMapping"></param>
-         /// <param name="parent"></param>
-        public ODentry(string parameter_name, UInt16 index,  DataType datatype, string defaultvalue, EDSsharp.AccessType accesstype, PDOMappingType PDOMapping, ODentry parent)
+       
+        /// <summary>
+        /// ODConstructor useful for subobjects
+        /// </summary>
+        /// <param name="parameter_name"></param>
+        /// <param name="index">NOT USED</param>
+        /// <param name="datatype"></param>
+        /// <param name="defaultvalue"></param>
+        /// <param name="accesstype"></param>
+        /// <param name="PDOMapping"></param>
+        /// <param name="parent"></param>
+        public ODentry(string parameter_name, UInt16 index, DataType datatype, string defaultvalue, EDSsharp.AccessType accesstype, PDOMappingType PDOMapping, ODentry parent)
         {
             this.parent = parent;
             this.parameter_name = parameter_name;
@@ -1179,13 +1178,12 @@ namespace libEDSsharp
             this.Index = index;
 
             if (accesstype >= EDSsharp.AccessType_Min && accesstype <= EDSsharp.AccessType_Max)
-                this.accesstype = accesstype;
+                this.SetAccessType(accesstype, PDOMapping > PDOMappingType.no);
             else
                 throw new ParameterException("AccessType invalid");
-
-            this.PDOtype = PDOMapping;
+ 
         }
-        
+
 
         /// <summary>
         /// ODEntry constructor for array subobjects
@@ -1193,15 +1191,34 @@ namespace libEDSsharp
         /// <param name="parameter_name"></param>
         /// <param name="index"></param>
         /// <param name="nosubindex"></param>
-        public ODentry(string parameter_name,UInt16 index, byte nosubindex)
+        public ODentry(string parameter_name, UInt16 index, byte nosubindex)
         {
             this.parameter_name = parameter_name;
             this.objecttype = ObjectType.ARRAY;
             this.Index = index;
             //this.nosubindexes = nosubindex;
-            this.objecttype = ObjectType.VAR;     
+            this.objecttype = ObjectType.VAR;
+        }
+        public ODentry(string parameter_name, ushort Index, ObjectType objecttype, DataType datatype, EDSsharp.AccessType accesstype, string defaultvalue, bool pdoAccess = false)
+        {
+            this.parameter_name = parameter_name;
+            this.Index = Index;
+            this.objecttype = objecttype;
+            this.datatype = datatype;
+            this.defaultvalue = defaultvalue;
+            this.SetAccessType(accesstype, pdoAccess);
         }
 
+        public ODentry(ODentry parent, string parameter_name, DataType datatype, EDSsharp.AccessType accesstype, string defaultvalue, bool pdoAccess = false)
+        {
+            this.parent = parent;
+            this.parameter_name = parameter_name;
+            this.datatype = datatype; 
+            this.defaultvalue = defaultvalue;
+            SetAccessType(accesstype, pdoAccess);
+        }
+
+      
         /// <summary>
         /// Make a deep clone of this ODentry
         /// </summary>
@@ -1243,7 +1260,7 @@ namespace libEDSsharp
             if (subobjects.Count > 0)
             {
                 return String.Format("{0:x4}[{1}] : {2} : {3}", Index, subobjects.Count, parameter_name, datatype);
- 
+
             }
             else
             {
@@ -1273,6 +1290,24 @@ namespace libEDSsharp
                 case "RECORD": this.objecttype = ObjectType.REC; break;
             }
         }
+        public void SetAccessType(EDSsharp.AccessType accessType, bool pdoAccess)
+        {
+            this.accesstype = accessType;
+            if (pdoAccess)
+            {
+                if (accesstype == EDSsharp.AccessType.rwr)
+                    PDOtype = PDOMappingType.RPDO;
+                else if (accesstype == EDSsharp.AccessType.rww)
+                    PDOtype = PDOMappingType.TPDO;
+                else
+                    PDOtype = PDOMappingType.optional;
+            }
+            else
+                PDOtype = PDOMappingType.no;
+
+        }
+
+        public void SetAccessType(EDSsharp.AccessType accessType, PDOMappingType pdo) => SetAccessType(accessType, pdo > PDOMappingType.no);
 
         public AccessSDO AccessSDO()
         {
@@ -1353,6 +1388,8 @@ namespace libEDSsharp
                     PDOtype = PDOMappingType.optional;
                     break;
             }
+            //re-evaluate accesstype
+            AccessSDO(this.AccessSDO(), accessPDO);
         }
 
         /// <summary>
@@ -1479,7 +1516,7 @@ namespace libEDSsharp
         /// <param name="writer">Handle to the stream writer to write to</param>
         /// <param name="ft">File type being written</param>
         /// 
-        public void Write(StreamWriter writer, InfoSection.Filetype ft, Odtype odt= Odtype.NORMAL, int module=0)
+        public void Write(StreamWriter writer, InfoSection.Filetype ft, Odtype odt = Odtype.NORMAL, int module = 0)
         {
 
             string fixedmodheader = "";
@@ -1489,23 +1526,23 @@ namespace libEDSsharp
                 fixedmodheader = string.Format("M{0}Fixed", module);
             }
 
-            if(odt == Odtype.SUBEXT)
+            if (odt == Odtype.SUBEXT)
             {
                 fixedmodheader = string.Format("M{0}SubExt", module);
             }
 
             if (parent != null)
             {
-                writer.WriteLine(string.Format("[{0}{1:X}sub{2:X}]", fixedmodheader,Index, Subindex));
+                writer.WriteLine(string.Format("[{0}{1:X}sub{2:X}]", fixedmodheader, Index, Subindex));
             }
             else
             {
-                writer.WriteLine(string.Format("[{0}{1:X}]",fixedmodheader,Index));
+                writer.WriteLine(string.Format("[{0}{1:X}]", fixedmodheader, Index));
             }
 
             writer.WriteLine(string.Format("ParameterName={0}", parameter_name));
 
-            if(ft == InfoSection.Filetype.File_DCF)
+            if (ft == InfoSection.Filetype.File_DCF)
             {
                 writer.WriteLine(string.Format("Denotation={0}", denotation));
             }
@@ -1532,7 +1569,7 @@ namespace libEDSsharp
                 writer.WriteLine(string.Format("AccessType={0}", accesstype.ToString()));
 
 
-                if(HighLimit != null && HighLimit != "")
+                if (HighLimit != null && HighLimit != "")
                 {
                     writer.WriteLine(string.Format("HighLimit={0}", Formatoctetstring(HighLimit)));
                 }
@@ -1541,7 +1578,7 @@ namespace libEDSsharp
                 {
                     writer.WriteLine(string.Format("LowLimit={0}", Formatoctetstring(LowLimit)));
                 }
-    
+
                 writer.WriteLine(string.Format("DefaultValue={0}", Formatoctetstring(defaultvalue)));
 
                 //TODO If the ObjectType is domain (0x2) the value of the object may be stored in a file,UploadFile and DownloadFile
@@ -1550,7 +1587,7 @@ namespace libEDSsharp
                     writer.WriteLine(string.Format("ParameterValue={0}", Formatoctetstring(actualvalue)));
                 }
 
-                writer.WriteLine(string.Format("PDOMapping={0}", PDOMapping==true?1:0));
+                writer.WriteLine(string.Format("PDOMapping={0}", PDOMapping == true ? 1 : 0));
 
                 if (prop.CO_flagsPDO == true)
                 {
@@ -1562,10 +1599,10 @@ namespace libEDSsharp
 
             //Count is for modules in the [MxSubExtxxxx]
             //Should we export this on EDS only, or DCF or both?
-            if (odt == Odtype.SUBEXT )
+            if (odt == Odtype.SUBEXT)
             {
-                    writer.WriteLine(string.Format("Count={0}", count));
-                    writer.WriteLine(string.Format("ObjExtend={0}", ObjExtend));
+                writer.WriteLine(string.Format("Count={0}", count));
+                writer.WriteLine(string.Format("ObjExtend={0}", ObjExtend));
             }
 
             //ObjectFlags is always optional (Page 15, DSP306) and used for DCF writing to nodes
@@ -1587,7 +1624,7 @@ namespace libEDSsharp
         {
             string cname = parameter_name.Replace("-", "_");
 
-            cname =  Regex.Replace(cname, @"([A-Z]) ([A-Z])", "$1_$2");
+            cname = Regex.Replace(cname, @"([A-Z]) ([A-Z])", "$1_$2");
             cname = cname.Replace(" ", "");
 
             return cname;
@@ -1603,7 +1640,7 @@ namespace libEDSsharp
 
             if (dt == DataType.UNKNOWN && this.parent != null)
                 dt = parent.datatype;
- 
+
             switch (dt)
             {
                 case DataType.BOOLEAN:
@@ -1615,7 +1652,7 @@ namespace libEDSsharp
 
                 case DataType.VISIBLE_STRING:
                 case DataType.OCTET_STRING:
-                    return Lengthofstring*8;
+                    return Lengthofstring * 8;
 
                 case DataType.INTEGER16:
                 case DataType.UNSIGNED16:
@@ -1659,7 +1696,7 @@ namespace libEDSsharp
             }
         }
 
-        
+
         /// <summary>
         /// This is the no of subindexes present in the object, it is NOT the maximum subobject index
         /// </summary>
@@ -1671,7 +1708,7 @@ namespace libEDSsharp
                 return subobjects.Count;
             }
         }
-        
+
         //warning eds files with gaps in subobject lists have been seen in the wild
         //this function tries to get the array index based on sub number not array number
         //it may return null
@@ -1746,10 +1783,10 @@ namespace libEDSsharp
         }
 
         public UInt16 Subindex
-        { 
+        {
             get
             {
-                if(this.parent!=null)
+                if (this.parent != null)
                 {
                     return parent.Findsubindex(this);
                 }
@@ -1760,7 +1797,7 @@ namespace libEDSsharp
 
         public UInt16 Findsubindex(ODentry od)
         {
-            foreach(KeyValuePair<UInt16,ODentry>kvp in subobjects )
+            foreach (KeyValuePair<UInt16, ODentry> kvp in subobjects)
             {
                 if (kvp.Value == od)
                     return kvp.Key;
@@ -1953,7 +1990,7 @@ namespace libEDSsharp
 
             ODentry od = new ODentry();
 
-            dummy_ods.Add(0x002, new ODentry("Dummy Int8", 0x002,  DataType.INTEGER8, "0", AccessType.ro, PDOMappingType.optional, null));
+            dummy_ods.Add(0x002, new ODentry("Dummy Int8", 0x002, DataType.INTEGER8, "0", AccessType.ro, PDOMappingType.optional, null));
             dummy_ods.Add(0x003, new ODentry("Dummy Int16", 0x003, DataType.INTEGER16, "0", AccessType.ro, PDOMappingType.optional, null));
             dummy_ods.Add(0x004, new ODentry("Dummy Int32", 0x004, DataType.INTEGER32, "0", AccessType.ro, PDOMappingType.optional, null));
             dummy_ods.Add(0x005, new ODentry("Dummy UInt8", 0x005, DataType.UNSIGNED8, "0", AccessType.ro, PDOMappingType.optional, null));
@@ -2022,7 +2059,7 @@ namespace libEDSsharp
             return mappingErrors;
         }
 
-        public void Parseline(string linex,int no)
+        public void Parseline(string linex, int no)
         {
 
             string key = "";
@@ -2055,7 +2092,7 @@ namespace libEDSsharp
                     }
                     else
                     {
-                        Warnings.warning_list.Add(string.Format("EDS Error on Line {0} : Duplicate section [{1}] ", no,sectionname));
+                        Warnings.warning_list.Add(string.Format("EDS Error on Line {0} : Duplicate section [{1}] ", no, sectionname));
                     }
                 }
             }
@@ -2071,7 +2108,7 @@ namespace libEDSsharp
                 {
                     key = m.Groups[1].ToString();
                     value = m.Groups[2].ToString();
-                    value = value.TrimEnd(' ','\t','\n','\r');
+                    value = value.TrimEnd(' ', '\t', '\n', '\r');
 
                     //not sure how we actually get here with out a section being in the dictionary already..
                     //suspect this is dead code.
@@ -2079,28 +2116,28 @@ namespace libEDSsharp
                     {
                         eds.Add(sectionname, new Dictionary<string, string>());
                     }
-            
+
                     if (custom_extension == false)
                     {
                         try
                         {
                             eds[sectionname].Add(key, value);
                         }
-                        catch(Exception)
+                        catch (Exception)
                         {
-                            Warnings.warning_list.Add(string.Format("EDS Error on Line {3} : Duplicate key \"{0}\" value \"{1}\" in section [{2}]", key,value,sectionname, no));
+                            Warnings.warning_list.Add(string.Format("EDS Error on Line {3} : Duplicate key \"{0}\" value \"{1}\" in section [{2}]", key, value, sectionname, no));
                         }
                     }
                     else
                     //Only allow our own extensions to populate the key/value pair
                     {
-                        if (key == "StorageLocation" || key== "TPDODetectCos")
+                        if (key == "StorageLocation" || key == "TPDODetectCos")
                         {
                             try
                             {
                                 eds[sectionname].Add(key, value);
                             }
-                            catch(Exception)
+                            catch (Exception)
                             {
                                 Warnings.warning_list.Add(string.Format("EDS Error on Line {3} : Duplicate custom key \"{0}\" value \"{1}\" in section [{2}]", key, value, sectionname, no));
                             }
@@ -2121,7 +2158,7 @@ namespace libEDSsharp
             if (m.Success)
             {
 
-                SortedDictionary<UInt16, ODentry>  target = this.ods;
+                SortedDictionary<UInt16, ODentry> target = this.ods;
 
                 //** MODULE DCF SUPPORT
 
@@ -2139,9 +2176,9 @@ namespace libEDSsharp
                         modules.Add(modindex, new Module(modindex));
 
                     if (m2.Groups[2].ToString() == "SubExt")
-                    {      
+                    {
                         target = modules[modindex].modulesubext;
-                          
+
                     }
                     else
                     {
@@ -2172,12 +2209,12 @@ namespace libEDSsharp
                     od.objecttype = ObjectType.VAR;
                 }
 
-                if(kvp.Value.ContainsKey("CompactSubObj"))
+                if (kvp.Value.ContainsKey("CompactSubObj"))
                 {
-                    od.CompactSubObj = Convert.ToByte(kvp.Value["CompactSubObj"],Getbase(kvp.Value["CompactSubObj"]));
+                    od.CompactSubObj = Convert.ToByte(kvp.Value["CompactSubObj"], Getbase(kvp.Value["CompactSubObj"]));
                 }
 
-                if(kvp.Value.ContainsKey("ObjFlags"))
+                if (kvp.Value.ContainsKey("ObjFlags"))
                 {
                     od.ObjFlags = Convert.ToByte(kvp.Value["ObjFlags"], Getbase(kvp.Value["ObjFlags"]));
                 }
@@ -2187,7 +2224,7 @@ namespace libEDSsharp
                 }
 
                 //Access Type
-                if(kvp.Value.ContainsKey("StorageLocation"))
+                if (kvp.Value.ContainsKey("StorageLocation"))
                 {
                     od.prop.CO_storageGroup = kvp.Value["StorageLocation"];
                 }
@@ -2243,45 +2280,42 @@ namespace libEDSsharp
                     if (m.Groups[5].Length != 0)
                     {
                         //FIXME are subindexes in hex always?
-                        UInt16 subindex = Convert.ToUInt16(m.Groups[5].ToString(),16);
+                        UInt16 subindex = Convert.ToUInt16(m.Groups[5].ToString(), 16);
                         od.parent = target[od.Index];
                         target[od.Index].subobjects.Add(subindex, od);
                     }
 
                     if (!kvp.Value.ContainsKey("DataType"))
-                            throw new ParameterException("Missing required field DataType on" + section);
-                        od.datatype = (DataType)Convert.ToInt16(kvp.Value["DataType"], Getbase(kvp.Value["DataType"]));
-                    
+                        throw new ParameterException("Missing required field DataType on" + section);
+                    od.datatype = (DataType)Convert.ToInt16(kvp.Value["DataType"], Getbase(kvp.Value["DataType"]));
+
                     if (!kvp.Value.ContainsKey("AccessType"))
                         throw new ParameterException("Missing required AccessType on" + section);
 
                     string accesstype = kvp.Value["AccessType"].ToLower();
 
+
+                    if (kvp.Value.ContainsKey("DefaultValue"))
+                        od.defaultvalue = kvp.Value["DefaultValue"];
+
+                    var pdoMap = true;
+                    if (kvp.Value.ContainsKey("PDOMapping"))
+                        pdoMap = Convert.ToInt16(kvp.Value["PDOMapping"], Getbase(kvp.Value["PDOMapping"])) == 1;
+
                     if (Enum.IsDefined(typeof(AccessType), accesstype))
                     {
-                        od.accesstype = (AccessType)Enum.Parse(typeof(AccessType), accesstype);
+                        var acc = (AccessType)Enum.Parse(typeof(AccessType), accesstype);
+                        od.SetAccessType(acc, pdoMap);
                     }
                     else
                     {
                         throw new ParameterException("Unknown AccessType on" + section);
                     }
 
-                    if (kvp.Value.ContainsKey("DefaultValue"))
-                        od.defaultvalue = kvp.Value["DefaultValue"];
-
-                    od.PDOtype = PDOMappingType.no;
-                    if (kvp.Value.ContainsKey("PDOMapping"))
-                    {
-                        
-                        bool pdo = Convert.ToInt16(kvp.Value["PDOMapping"],Getbase(kvp.Value["PDOMapping"])) == 1;
-                        if (pdo == true)
-                            od.PDOtype = PDOMappingType.optional;
-                    }
-
                 }
 
-              
-                if(od.objecttype == ObjectType.REC|| od.objecttype == ObjectType.ARRAY || od.objecttype == ObjectType.DEFSTRUCT)
+
+                if (od.objecttype == ObjectType.REC || od.objecttype == ObjectType.ARRAY || od.objecttype == ObjectType.DEFSTRUCT)
                 {
 
                     if (od.CompactSubObj != 0)
@@ -2295,7 +2329,8 @@ namespace libEDSsharp
                         string accesstype = kvp.Value["AccessType"];
                         if (Enum.IsDefined(typeof(AccessType), accesstype))
                         {
-                            od.accesstype = (AccessType)Enum.Parse(typeof(AccessType), accesstype);
+                            var at = (AccessType)Enum.Parse(typeof(AccessType), accesstype);
+                            od.SetAccessType(at, false);
                         }
                         else
                         {
@@ -2304,17 +2339,17 @@ namespace libEDSsharp
 
                         //now we generate CompactSubObj number of var objects below this parent
 
-                        if(od.CompactSubObj>=0xfe)
+                        if (od.CompactSubObj >= 0xfe)
                         {
                             od.CompactSubObj = 0xfe;
                         }
 
-                        ODentry subi = new ODentry("NrOfObjects", od.Index, DataType.UNSIGNED8, String.Format("0x{0:x2}",od.CompactSubObj), AccessType.ro, PDOMappingType.no, od);      
+                        ODentry subi = new ODentry("NrOfObjects", od.Index, DataType.UNSIGNED8, String.Format("0x{0:x2}", od.CompactSubObj), AccessType.ro, PDOMappingType.no, od);
                         od.subobjects.Add(0x00, subi);
 
-                        for (int x=1; x<= od.CompactSubObj; x++)
+                        for (int x = 1; x <= od.CompactSubObj; x++)
                         {
-                            string parameter_name = string.Format("{0}{1:x2}", od.parameter_name, x );
+                            string parameter_name = string.Format("{0}{1:x2}", od.parameter_name, x);
                             ODentry sub = new ODentry(parameter_name, od.Index, od.datatype, od.defaultvalue, od.accesstype, od.PDOtype, od);
 
                             if (kvp.Value.ContainsKey("HighLimit"))
@@ -2323,7 +2358,7 @@ namespace libEDSsharp
                             if (kvp.Value.ContainsKey("LowLimit"))
                                 sub.HighLimit = kvp.Value["LowLimit"];
 
-                            od.subobjects.Add((ushort)(x ), sub);
+                            od.subobjects.Add((ushort)(x), sub);
                         }
 
                     }
@@ -2337,10 +2372,10 @@ namespace libEDSsharp
                     }
                 }
 
-                if(od.objecttype == ObjectType.DOMAIN)
+                if (od.objecttype == ObjectType.DOMAIN)
                 {
                     od.datatype = DataType.DOMAIN;
-                    od.accesstype = AccessType.rw;
+                    od.SetAccessType(AccessType.rw, false);
 
                     if (kvp.Value.ContainsKey("DefaultValue"))
                         od.defaultvalue = kvp.Value["DefaultValue"];
@@ -2376,7 +2411,7 @@ namespace libEDSsharp
                 int lineno = 1;
                 foreach (string linex in File.ReadLines(filename))
                 {
-                    Parseline(linex,lineno);
+                    Parseline(linex, lineno);
                     lineno++;
                 }
 
@@ -2388,15 +2423,15 @@ namespace libEDSsharp
                 }
 
                 fi = new FileInfo(eds["FileInfo"]);
-                if(eds.ContainsKey("DummyUsage"))
+                if (eds.ContainsKey("DummyUsage"))
                     du = new Dummyusage(eds["DummyUsage"]);
 
                 md = new MandatoryObjects(eds["MandatoryObjects"]);
 
-                if(eds.ContainsKey("OptionalObjects"))
+                if (eds.ContainsKey("OptionalObjects"))
                     oo = new OptionalObjects(eds["OptionalObjects"]);
 
-                if(eds.ContainsKey("ManufacturerObjects"))
+                if (eds.ContainsKey("ManufacturerObjects"))
                     mo = new ManufacturerObjects(eds["ManufacturerObjects"]);
 
                 if (eds.ContainsKey("TypeDefinitions"))
@@ -2404,12 +2439,12 @@ namespace libEDSsharp
 
                 //Only DCF not EDS files
                 dc = new DeviceCommissioning();
-                if(eds.ContainsKey("DeviceCommissioning"))
+                if (eds.ContainsKey("DeviceCommissioning"))
                 {
-                    dc.Parse(eds["DeviceCommissioning"],"DeviceCommissioning");
+                    dc.Parse(eds["DeviceCommissioning"], "DeviceCommissioning");
                     edsfilename = fi.LastEDS;
                 }
-                
+
                 c = new Comments();
 
                 if (eds.ContainsKey("Comments"))
@@ -2485,7 +2520,7 @@ namespace libEDSsharp
                         if (m.Success)
                         {
                             UInt16 modindex = Convert.ToUInt16(m.Groups[1].Value);
-                            MxFixedObjects mxf = new MxFixedObjects(eds[s],modindex);
+                            MxFixedObjects mxf = new MxFixedObjects(eds[s], modindex);
 
                             if (!modules.ContainsKey(modindex))
                                 modules.Add(modindex, new Module(modindex));
@@ -2499,10 +2534,10 @@ namespace libEDSsharp
 
                 if (eds.ContainsKey("ConnectedModules"))
                 {
-                    cm = new ConnectedModules(eds["ConnectedModules"]);              
+                    cm = new ConnectedModules(eds["ConnectedModules"]);
                 }
 
-                 //COMPACT PDO
+                //COMPACT PDO
 
                 if (di.CompactPDO != 0)
                 {
@@ -2512,7 +2547,7 @@ namespace libEDSsharp
                         ApplycompactPDO(index);
                     }
 
-                    for (UInt16 index = 0x1800; index < 0x1A00;index ++)
+                    for (UInt16 index = 0x1800; index < 0x1A00; index++)
                     {
                         ApplycompactPDO(index);
                     }
@@ -2594,12 +2629,12 @@ namespace libEDSsharp
             UInt16 noexplicittxpdos = di.NrOfTXPDO;
 
             //this is how many PDOS need generating on the fly
-            UInt16 noimplictrxpdos = (UInt16) (totalnorxpdos - noexplicitrxpdos);
-            UInt16 noimplicttxpdos = (UInt16) (totalnotxpdos - noexplicittxpdos);
+            UInt16 noimplictrxpdos = (UInt16)(totalnorxpdos - noexplicitrxpdos);
+            UInt16 noimplicttxpdos = (UInt16)(totalnotxpdos - noexplicittxpdos);
 
-            for(UInt16 index = 0x1400; (index < 0x1600) && (noimplictrxpdos > 0) ;index++)
+            for (UInt16 index = 0x1400; (index < 0x1600) && (noimplictrxpdos > 0); index++)
             {
-                if(!ods.ContainsKey(index))
+                if (!ods.ContainsKey(index))
                 {
                     CreateRXPDO(index);
                     noimplictrxpdos--;
@@ -2621,7 +2656,7 @@ namespace libEDSsharp
 
         public void Savefile(string filename, InfoSection.Filetype ft)
         {
-            if(ft==InfoSection.Filetype.File_EDS)
+            if (ft == InfoSection.Filetype.File_EDS)
                 this.edsfilename = filename;
 
             if (ft == InfoSection.Filetype.File_DCF)
@@ -2648,14 +2683,14 @@ namespace libEDSsharp
 
             StreamWriter writer = File.CreateText(filename);
             writer.NewLine = "\n";
-            fi.Write(writer,ft);
-            di.Write(writer,ft);
-            du.Write(writer,ft);
+            fi.Write(writer, ft);
+            di.Write(writer, ft);
+            du.Write(writer, ft);
             c.Write(writer);
 
-            if(ft == InfoSection.Filetype.File_DCF)
+            if (ft == InfoSection.Filetype.File_DCF)
             {
-                dc.Write(writer,ft);
+                dc.Write(writer, ft);
             }
 
             //regenerate the object lists
@@ -2667,8 +2702,8 @@ namespace libEDSsharp
             {
                 ODentry entry = kvp.Value;
 
-				if (entry.prop.CO_disabled == true)
-					continue;
+                if (entry.prop.CO_disabled == true)
+                    continue;
 
                 if (entry.Index == 0x1000 || entry.Index == 0x1001 || entry.Index == 0x1018)
                 {
@@ -2692,12 +2727,12 @@ namespace libEDSsharp
                 ODentry od = kvp.Value;
                 if (md.objectlist.ContainsValue(od.Index))
                 {
-                    od.Write(writer,ft);
+                    od.Write(writer, ft);
                     foreach (KeyValuePair<UInt16, ODentry> kvp2 in od.subobjects)
                     {
                         ODentry od2 = kvp2.Value;
-                        od2.Write(writer,ft);
-                    }                    
+                        od2.Write(writer, ft);
+                    }
                 }
             }
 
@@ -2708,12 +2743,12 @@ namespace libEDSsharp
                 ODentry od = kvp.Value;
                 if (oo.objectlist.ContainsValue(od.Index))
                 {
-                    od.Write(writer,ft);
+                    od.Write(writer, ft);
                     foreach (KeyValuePair<UInt16, ODentry> kvp2 in od.subobjects)
                     {
                         ODentry od2 = kvp2.Value;
-                        od2.Write(writer,ft);
-                    }                    
+                        od2.Write(writer, ft);
+                    }
                 }
             }
 
@@ -2724,12 +2759,12 @@ namespace libEDSsharp
                 ODentry od = kvp.Value;
                 if (mo.objectlist.ContainsValue(od.Index))
                 {
-                    od.Write(writer,ft);
+                    od.Write(writer, ft);
                     foreach (KeyValuePair<UInt16, ODentry> kvp2 in od.subobjects)
                     {
                         ODentry od2 = kvp2.Value;
-                        od2.Write(writer,ft);
-                    }                    
+                        od2.Write(writer, ft);
+                    }
                 }
             }
 
@@ -2826,12 +2861,12 @@ namespace libEDSsharp
             return (Convert.ToByte(defaultvalue, Getbase(defaultvalue)));
         }
 
-        static public UInt16 ConvertToUInt16(byte [] bytes)
+        static public UInt16 ConvertToUInt16(byte[] bytes)
         {
 
             UInt16 value = 0;
 
-            value = (UInt16) ((bytes[0] << 8) | bytes[1]);
+            value = (UInt16)((bytes[0] << 8) | bytes[1]);
 
             return value;
 
@@ -2839,7 +2874,7 @@ namespace libEDSsharp
 
         static public UInt16 ConvertToUInt16(string defaultvalue)
         {
-            if (defaultvalue == null || defaultvalue == "" )
+            if (defaultvalue == null || defaultvalue == "")
                 return 0;
 
             return (Convert.ToUInt16(defaultvalue, Getbase(defaultvalue)));
@@ -2847,7 +2882,7 @@ namespace libEDSsharp
 
         static public UInt32 ConvertToUInt32(string defaultvalue)
         {
-            if (defaultvalue == null || defaultvalue == "" )
+            if (defaultvalue == null || defaultvalue == "")
                 return 0;
 
             return (Convert.ToUInt32(defaultvalue, Getbase(defaultvalue)));
@@ -2886,13 +2921,13 @@ namespace libEDSsharp
         {
             di.NrOfRXPDO = 0;
             di.NrOfTXPDO = 0;
-            foreach(KeyValuePair<UInt16,ODentry> kvp in ods)
+            foreach (KeyValuePair<UInt16, ODentry> kvp in ods)
             {
                 ODentry od = kvp.Value;
-                if(od.prop.CO_disabled == false && od.Index >= 0x1400 && od.Index < 0x1600)
+                if (od.prop.CO_disabled == false && od.Index >= 0x1400 && od.Index < 0x1600)
                     di.NrOfRXPDO++;
 
-                if(od.prop.CO_disabled == false && od.Index >= 0x1800 && od.Index < 0x1A00)
+                if (od.prop.CO_disabled == false && od.Index >= 0x1800 && od.Index < 0x1A00)
                     di.NrOfTXPDO++;
 
             }
@@ -2909,9 +2944,9 @@ namespace libEDSsharp
                 return 0;
             }
 
-    		input = input.ToUpper();
+            input = input.ToUpper();
 
-            if(input.Contains("$NODEID"))     
+            if (input.Contains("$NODEID"))
                 nodeidpresent = true;
             else
                 nodeidpresent = false;
@@ -2930,7 +2965,7 @@ namespace libEDSsharp
 
                 string[] bits = input.Split('+');
 
-                if(bits.Length==1)
+                if (bits.Length == 1)
                 {
                     //nothing to parse here just return the value
                     return Convert.ToUInt32(input, Getbase(input));
@@ -2946,9 +2981,9 @@ namespace libEDSsharp
 
                 return (UInt32)(b1 + b2);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Warnings.warning_list.Add(String.Format("Error parsing node id {0} nodes, {1}", input,e.ToString()));
+                Warnings.warning_list.Add(String.Format("Error parsing node id {0} nodes, {1}", input, e.ToString()));
             }
 
             return 0;
@@ -2958,13 +2993,13 @@ namespace libEDSsharp
         public bool tryGetODEntry(UInt16 index, out ODentry od)
         {
             od = null;
-            if(ods.ContainsKey(index))
+            if (ods.ContainsKey(index))
             {
                 od = ods[index];
                 return true;
             }
 
-            if(dummy_ods.ContainsKey(index))
+            if (dummy_ods.ContainsKey(index))
             {
                 od = dummy_ods[index];
                 return true;
@@ -2979,7 +3014,7 @@ namespace libEDSsharp
         //TX MAP 0x1a00
 
         //call this with the comm param index not the mapping
-        public bool CreatePDO(bool rx,UInt16 index)
+        public bool CreatePDO(bool rx, UInt16 index)
         {
             //check if we are creating an RX PDO it is a valid index
             if (rx && (index < 0x1400 || index > 0x15ff))
@@ -2994,7 +3029,7 @@ namespace libEDSsharp
                 return false;
 
             //check the associated mapping index does not exist
-            if (ods.ContainsKey((UInt16)(index+0x200)))
+            if (ods.ContainsKey((UInt16)(index + 0x200)))
                 return false;
 
             ODentry od_comparam;
@@ -3080,19 +3115,19 @@ mapped object  (subindex 1...8)
 
             od_comparam.objecttype = ObjectType.REC;
             od_comparam.prop.CO_storageGroup = "ROM";
-            od_comparam.accesstype = AccessType.ro;
-            od_comparam.PDOtype = PDOMappingType.no;
+            od_comparam.SetAccessType(AccessType.ro, false);
+
 
             ODentry sub;
 
-          
-            if(rx)
+
+            if (rx)
             {
                 sub = new ODentry("max sub-index", index, DataType.UNSIGNED8, "2", AccessType.ro, PDOMappingType.no, od_comparam);
                 od_comparam.subobjects.Add(0, sub);
                 sub = new ODentry("COB-ID used by RPDO", index, DataType.UNSIGNED32, "$NODEID+0x200", AccessType.rw, PDOMappingType.no, od_comparam);
                 od_comparam.subobjects.Add(1, sub);
-                sub = new ODentry("transmission type", index,  DataType.UNSIGNED8, "254", AccessType.rw, PDOMappingType.no, od_comparam);
+                sub = new ODentry("transmission type", index, DataType.UNSIGNED8, "254", AccessType.rw, PDOMappingType.no, od_comparam);
                 od_comparam.subobjects.Add(2, sub);
 
             }
@@ -3117,15 +3152,15 @@ mapped object  (subindex 1...8)
 
             od_mapping.objecttype = ObjectType.REC;
             od_mapping.prop.CO_storageGroup = "ROM";
-            od_mapping.accesstype = AccessType.rw; //Same as default but inconsistent with ROM above
-            od_mapping.PDOtype = PDOMappingType.no;
+            od_mapping.SetAccessType( AccessType.rw, false); //Same as default but inconsistent with ROM above
+         
 
-            sub = new ODentry("Number of mapped objects", (UInt16)(index + 0x200),  DataType.UNSIGNED8, "0", AccessType.ro, PDOMappingType.no, od_mapping);
+            sub = new ODentry("Number of mapped objects", (UInt16)(index + 0x200), DataType.UNSIGNED8, "0", AccessType.ro, PDOMappingType.no, od_mapping);
             od_mapping.subobjects.Add(0, sub);
 
-            for (int p=1;p<=8;p++)
+            for (int p = 1; p <= 8; p++)
             {
-                sub = new ODentry(string.Format("mapped object {0}",p), (UInt16)(index+0x200), DataType.UNSIGNED32, "0x00000000", AccessType.ro, PDOMappingType.no, od_mapping);
+                sub = new ODentry(string.Format("mapped object {0}", p), (UInt16)(index + 0x200), DataType.UNSIGNED32, "0x00000000", AccessType.ro, PDOMappingType.no, od_mapping);
                 od_mapping.subobjects.Add((byte)p, sub);
             }
 
@@ -3148,7 +3183,7 @@ mapped object  (subindex 1...8)
         public ODentry Getobject(UInt16 no)
         {
 
-            if(no>=0x002 && no<=0x007)
+            if (no >= 0x002 && no <= 0x007)
             {
                 return dummy_ods[no];
             }
@@ -3165,28 +3200,28 @@ mapped object  (subindex 1...8)
 
         public ODentry Getobject(string uniqueID)
         {
-            foreach(KeyValuePair<UInt16,ODentry> e in ods)
+            foreach (KeyValuePair<UInt16, ODentry> e in ods)
             {
                 if (e.Value.uniqueID == uniqueID)
                     return e.Value;
 
-                if(e.Value.subobjects!=null && e.Value.subobjects.Count>0)
+                if (e.Value.subobjects != null && e.Value.subobjects.Count > 0)
                 {
-                    foreach(KeyValuePair<UInt16, ODentry> sube in e.Value.subobjects)
+                    foreach (KeyValuePair<UInt16, ODentry> sube in e.Value.subobjects)
                     {
                         if (sube.Value.uniqueID == uniqueID)
                             return sube.Value;
                     }
 
                 }
-                
+
 
             }
 
             return null;
         }
 
-        public int GetNoEnabledObjects(bool includesub=false)
+        public int GetNoEnabledObjects(bool includesub = false)
         {
             int enabledcount = 0;
             foreach (ODentry od in ods.Values)
@@ -3195,9 +3230,9 @@ mapped object  (subindex 1...8)
                 {
                     enabledcount++;
 
-                    if(includesub)
+                    if (includesub)
                     {
-                        foreach(ODentry sub in od.subobjects.Values)
+                        foreach (ODentry sub in od.subobjects.Values)
                         {
                             if (od.prop.CO_disabled == false)
                             {
@@ -3217,15 +3252,15 @@ mapped object  (subindex 1...8)
 
     }
 
-        public class ParameterException : Exception
+    public class ParameterException : Exception
+    {
+        public ParameterException(String message)
+            : base(message)
         {
-            public ParameterException(String message)
-                : base(message)
-            {
-        
-            }
+
         }
+    }
 
-      
 
- }
+
+}

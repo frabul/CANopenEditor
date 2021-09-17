@@ -444,23 +444,14 @@ namespace ODEditor
                 }
                 else
                 {
-                    try
-                    {
-                        od.accesstype = (EDSsharp.AccessType)Enum.Parse(typeof(EDSsharp.AccessType), comboBox_accessSDO.SelectedItem.ToString());
-                    }
-                    catch (Exception)
-                    {
-                        od.accesstype = EDSsharp.AccessType.ro;
-                    }
+                    AccessSDO sdoAccess;
+                    AccessPDO pdoAccess;
+                    if (!Enum.TryParse(comboBox_accessSDO.SelectedItem.ToString(), out sdoAccess))
+                        sdoAccess = AccessSDO.ro;
+                    if (!Enum.TryParse(comboBox_accessPDO.SelectedItem.ToString(), out pdoAccess))
+                        pdoAccess = AccessPDO.no;
 
-                    try
-                    {
-                        od.PDOtype = (PDOMappingType)Enum.Parse(typeof(PDOMappingType), comboBox_accessPDO.SelectedItem.ToString());
-                    }
-                    catch (Exception)
-                    {
-                        od.PDOtype = PDOMappingType.no;
-                    }
+                    od.AccessSDO(sdoAccess, pdoAccess);
                 }
 
                 // CO_accessSRDO
@@ -503,14 +494,12 @@ namespace ODEditor
                         if (subod.Subindex > 0)
                         {
                             subod.datatype = od.datatype;
-                            subod.accesstype = od.accesstype;
-                            subod.PDOtype = od.PDOtype;
+                            subod.SetAccessType(od.accesstype, od.PDOMapping);
                             subod.prop.CO_accessSRDO = od.prop.CO_accessSRDO;
                         }
                     }
                     od.parent.datatype = od.datatype;
-                    od.parent.accesstype = od.accesstype;
-                    od.parent.PDOtype = od.PDOtype;
+                    od.parent.SetAccessType(od.accesstype, od.PDOMapping);
                     od.parent.prop.CO_accessSRDO = od.prop.CO_accessSRDO;
                 }
             }

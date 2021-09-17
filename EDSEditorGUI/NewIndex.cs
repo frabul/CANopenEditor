@@ -46,7 +46,7 @@ namespace ODEditor
 
         private void Button_create_Click(object sender, EventArgs e)
         {
-            UInt16 index = (UInt16) numericUpDown_index.Value;
+            UInt16 index = (UInt16)numericUpDown_index.Value;
             if (eds.ods.ContainsKey(index))
             {
                 MessageBox.Show(String.Format("Index 0x{0:X4} already exists in OD", index));
@@ -76,15 +76,14 @@ namespace ODEditor
             // create OD entry
             if (objectType == ObjectType.VAR)
             {
-                od = new ODentry
-                {
-                    parameter_name = name,
-                    Index = index,
-                    objecttype = objectType,
-                    datatype = DataType.UNSIGNED32,
-                    accesstype = EDSsharp.AccessType.rw,
-                    defaultvalue = "0"
-                };
+                od = new ODentry (
+                    parameter_name: name,
+                    Index: index,
+                    objecttype: objectType,
+                    datatype: DataType.UNSIGNED32,
+                    accesstype: EDSsharp.AccessType.rw,
+                    defaultvalue: "0"
+                );
             }
             else
             {
@@ -96,24 +95,22 @@ namespace ODEditor
                 };
 
                 od.subobjects.Add(0, new ODentry
-                {
-                    parent = od,
-                    parameter_name = "Highest sub-index supported",
-                    objecttype = ObjectType.VAR,
-                    datatype = DataType.UNSIGNED8,
-                    accesstype = EDSsharp.AccessType.ro,
-                    defaultvalue = "0x01"
-                });
+                (
+                    parent: od,
+                    parameter_name: "Highest sub-index supported",
+                    datatype: DataType.UNSIGNED8,
+                    accesstype: EDSsharp.AccessType.ro,
+                    defaultvalue: "0x01"
+                ));
 
                 od.subobjects.Add(1, new ODentry
-                {
-                    parent = od,
-                    parameter_name = "Sub Object 1",
-                    objecttype = ObjectType.VAR,
-                    datatype = DataType.UNSIGNED32,
-                    accesstype = EDSsharp.AccessType.rw,
-                    defaultvalue = "0"
-                });
+                (
+                    parent: od,
+                    parameter_name: "Sub Object 1",
+                    datatype: DataType.UNSIGNED32,
+                    accesstype: EDSsharp.AccessType.rw,
+                    defaultvalue: "0"
+                ));
             }
 
             eds.ods.Add(od.Index, od);

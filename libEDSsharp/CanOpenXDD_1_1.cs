@@ -60,7 +60,7 @@ namespace libEDSsharp
         /// </summary>
         /// <param name="file">Name of the multi xdd file</param>
         /// <returns>List of EDSsharp objects</returns>
-        public List<EDSsharp> ReadMultiXML(string file )
+        public List<EDSsharp> ReadMultiXML(string file)
         {
             List<EDSsharp> edss = new List<EDSsharp>();
 
@@ -70,7 +70,7 @@ namespace libEDSsharp
                 StreamReader reader = new StreamReader(file);
                 CanOpenProject_1_1 oep = (CanOpenProject_1_1)serializer.Deserialize(reader);
 
-                foreach(ISO15745ProfileContainer cont in oep.ISO15745ProfileContainer)
+                foreach (ISO15745ProfileContainer cont in oep.ISO15745ProfileContainer)
                 {
                     edss.Add(Convert(cont));
                 }
@@ -154,12 +154,12 @@ namespace libEDSsharp
             switch (edsAccessType)
             {
                 case EDSsharp.AccessType.@const: return parameterTemplateAccess.@const;
-                case EDSsharp.AccessType.ro:     return parameterTemplateAccess.read;
-                case EDSsharp.AccessType.rw:     return parameterTemplateAccess.readWrite;
-                case EDSsharp.AccessType.rwr:    return parameterTemplateAccess.readWriteInput;
-                case EDSsharp.AccessType.rww:    return parameterTemplateAccess.readWriteOutput;
-                case EDSsharp.AccessType.wo:     return parameterTemplateAccess.write;
-                default:                         return parameterTemplateAccess.noAccess;
+                case EDSsharp.AccessType.ro: return parameterTemplateAccess.read;
+                case EDSsharp.AccessType.rw: return parameterTemplateAccess.readWrite;
+                case EDSsharp.AccessType.rwr: return parameterTemplateAccess.readWriteInput;
+                case EDSsharp.AccessType.rww: return parameterTemplateAccess.readWriteOutput;
+                case EDSsharp.AccessType.wo: return parameterTemplateAccess.write;
+                default: return parameterTemplateAccess.noAccess;
             }
         }
 
@@ -167,17 +167,17 @@ namespace libEDSsharp
         {
             switch (xddAccessType)
             {
-                case parameterTemplateAccess.@const:          return EDSsharp.AccessType.@const;
-                case parameterTemplateAccess.read:            return EDSsharp.AccessType.ro;
-                case parameterTemplateAccess.readWrite:       return EDSsharp.AccessType.rw;
-                case parameterTemplateAccess.readWriteInput:  return EDSsharp.AccessType.rwr;
+                case parameterTemplateAccess.@const: return EDSsharp.AccessType.@const;
+                case parameterTemplateAccess.read: return EDSsharp.AccessType.ro;
+                case parameterTemplateAccess.readWrite: return EDSsharp.AccessType.rw;
+                case parameterTemplateAccess.readWriteInput: return EDSsharp.AccessType.rwr;
                 case parameterTemplateAccess.readWriteOutput: return EDSsharp.AccessType.rww;
-                case parameterTemplateAccess.write:           return EDSsharp.AccessType.wo;
-                default:                                      return EDSsharp.AccessType.UNKNOWN;
+                case parameterTemplateAccess.write: return EDSsharp.AccessType.wo;
+                default: return EDSsharp.AccessType.UNKNOWN;
             }
         }
 
-        private Items1ChoiceType ConvertDataType (ODentry od)
+        private Items1ChoiceType ConvertDataType(ODentry od)
         {
             UInt32 byteLength;
             bool signed = false;
@@ -187,19 +187,19 @@ namespace libEDSsharp
 
             switch (dt)
             {
-                case DataType.BOOLEAN:        return Items1ChoiceType.BOOL;
-                case DataType.INTEGER8:       return Items1ChoiceType.SINT;
-                case DataType.INTEGER16:      return Items1ChoiceType.INT;
-                case DataType.INTEGER32:      return Items1ChoiceType.DINT;
-                case DataType.INTEGER64:      return Items1ChoiceType.LINT;
-                case DataType.UNSIGNED8:      return Items1ChoiceType.USINT;
-                case DataType.UNSIGNED16:     return Items1ChoiceType.UINT;
-                case DataType.UNSIGNED32:     return Items1ChoiceType.UDINT;
-                case DataType.UNSIGNED64:     return Items1ChoiceType.ULINT;
-                case DataType.REAL32:         return Items1ChoiceType.REAL;
-                case DataType.REAL64:         return Items1ChoiceType.LREAL;
+                case DataType.BOOLEAN: return Items1ChoiceType.BOOL;
+                case DataType.INTEGER8: return Items1ChoiceType.SINT;
+                case DataType.INTEGER16: return Items1ChoiceType.INT;
+                case DataType.INTEGER32: return Items1ChoiceType.DINT;
+                case DataType.INTEGER64: return Items1ChoiceType.LINT;
+                case DataType.UNSIGNED8: return Items1ChoiceType.USINT;
+                case DataType.UNSIGNED16: return Items1ChoiceType.UINT;
+                case DataType.UNSIGNED32: return Items1ChoiceType.UDINT;
+                case DataType.UNSIGNED64: return Items1ChoiceType.ULINT;
+                case DataType.REAL32: return Items1ChoiceType.REAL;
+                case DataType.REAL64: return Items1ChoiceType.LREAL;
                 case DataType.VISIBLE_STRING: return Items1ChoiceType.STRING;
-                case DataType.OCTET_STRING:   return Items1ChoiceType.BITSTRING;
+                case DataType.OCTET_STRING: return Items1ChoiceType.BITSTRING;
                 case DataType.UNICODE_STRING: return Items1ChoiceType.WSTRING;
 
                 case DataType.DOMAIN:
@@ -211,16 +211,16 @@ namespace libEDSsharp
                     return Items1ChoiceType.DINT;
 
                 // transform other non standard values to OCTET_STRING
-                case DataType.INTEGER24:       byteLength = 3; signed = true; break;
-                case DataType.INTEGER40:       byteLength = 5; signed = true; break;
-                case DataType.INTEGER48:       byteLength = 6; signed = true; break;
-                case DataType.INTEGER56:       byteLength = 7; signed = true; break;
-                case DataType.UNSIGNED24:      byteLength = 3; break;
-                case DataType.UNSIGNED40:      byteLength = 5; break;
+                case DataType.INTEGER24: byteLength = 3; signed = true; break;
+                case DataType.INTEGER40: byteLength = 5; signed = true; break;
+                case DataType.INTEGER48: byteLength = 6; signed = true; break;
+                case DataType.INTEGER56: byteLength = 7; signed = true; break;
+                case DataType.UNSIGNED24: byteLength = 3; break;
+                case DataType.UNSIGNED40: byteLength = 5; break;
                 case DataType.UNSIGNED48:
                 case DataType.TIME_OF_DAY:
                 case DataType.TIME_DIFFERENCE: byteLength = 6; break;
-                case DataType.UNSIGNED56:      byteLength = 7; break;
+                case DataType.UNSIGNED56: byteLength = 7; break;
             }
 
             // set datatype OCTET_STRING and write default value as a sequence of bytes, little endian, like "56 34 12"
@@ -228,7 +228,7 @@ namespace libEDSsharp
             try
             {
                 value = signed ? (UInt64)((Int64)new System.ComponentModel.Int64Converter().ConvertFromString(od.defaultvalue))
-                               : (UInt64) new System.ComponentModel.UInt64Converter().ConvertFromString(od.defaultvalue);
+                               : (UInt64)new System.ComponentModel.UInt64Converter().ConvertFromString(od.defaultvalue);
             }
             catch (Exception)
             {
@@ -279,7 +279,8 @@ namespace libEDSsharp
         private void WriteVar(parameter devPar, ODentry od)
         {
             if (od.accesstype == EDSsharp.AccessType.UNKNOWN && od.parent != null && od.parent.objecttype == ObjectType.ARRAY)
-                od.accesstype = od.parent.accesstype;
+                od.SetAccessType(od.parent.accesstype, od.parent.PDOMapping);
+
 
             devPar.access = ConvertAccessType(od.accesstype);
 
@@ -287,7 +288,7 @@ namespace libEDSsharp
             devPar.Items1ElementName = new Items1ChoiceType[] { ConvertDataType(od) };
 
             if (od.defaultvalue != null && od.defaultvalue != "")
-                    devPar.defaultValue = new defaultValue { value = od.defaultvalue };
+                devPar.defaultValue = new defaultValue { value = od.defaultvalue };
 
             if (od.LowLimit != null && od.LowLimit != "" && od.HighLimit != null && od.HighLimit != "")
             {
@@ -476,7 +477,8 @@ namespace libEDSsharp
                         try { netSubObj.PDOmapping = (CANopenObjectListCANopenObjectCANopenSubObjectPDOmapping)Enum.Parse(typeof(CANopenObjectListCANopenObjectCANopenSubObjectPDOmapping), subod.PDOtype.ToString()); }
                         catch (Exception) { netSubObj.PDOmapping = CANopenObjectListCANopenObjectCANopenSubObjectPDOmapping.no; }
 
-                        var devSubPar = new parameter {
+                        var devSubPar = new parameter
+                        {
                             uniqueID = "UID_SUB_" + subUid
                         };
                         if (subod.Description != null && subod.Description != "")
@@ -805,7 +807,8 @@ namespace libEDSsharp
             return container;
         }
 
-        private string G_label_getDescription(object[] items) {
+        private string G_label_getDescription(object[] items)
+        {
             if (items != null)
             {
                 foreach (object o in items)
@@ -998,7 +1001,8 @@ namespace libEDSsharp
                                 try { accessType = (EDSsharp.AccessType)Enum.Parse(typeof(EDSsharp.AccessType), netObj.accessType.ToString()); }
                                 catch (Exception) { accessType = EDSsharp.AccessType.ro; }
                             }
-                            else {
+                            else
+                            {
                                 accessType = EDSsharp.AccessType.ro;
                             }
 
@@ -1025,10 +1029,7 @@ namespace libEDSsharp
                             {
                                 Index = index,
                                 parameter_name = netObj.name ?? "",
-                                objecttype = (ObjectType)netObj.objectType,
-                                PDOtype = PDOtype,
-                                // following values are optional and may be overriden by parameters from body_device
-                                accesstype = accessType,
+                                objecttype = (ObjectType)netObj.objectType, 
                                 datatype = netObj.dataType != null && netObj.dataType.Length == 1 ? (DataType)netObj.dataType[0] : DataType.UNKNOWN,
                                 defaultvalue = netObj.defaultValue ?? "",
                                 actualvalue = netObj.actualValue ?? "",
@@ -1038,14 +1039,14 @@ namespace libEDSsharp
                                 ObjFlags = netObj.objFlags != null && netObj.objFlags.Length == 2 ? netObj.objFlags[1] : (byte)0,
                                 uniqueID = netObj.uniqueIDRef ?? ""
                             };
-
+                            od.SetAccessType(accessType, PDOtype);
                             if (netObj.uniqueIDRef != null && netObj.uniqueIDRef != "" && parameters.ContainsKey(netObj.uniqueIDRef))
                             {
                                 parameter devPar = parameters[netObj.uniqueIDRef];
 
                                 od.Description = G_label_getDescription(devPar.Items);
 
-                                od.accesstype = ConvertAccessType(devPar.access);
+                                od.SetAccessType(ConvertAccessType(devPar.access), od.PDOtype);
 
                                 if (devPar.defaultValue != null && devPar.defaultValue.value != null)
                                     od.defaultvalue = devPar.defaultValue.value;
@@ -1113,9 +1114,6 @@ namespace libEDSsharp
                                         parent = od,
                                         parameter_name = netSubObj.name ?? "",
                                         objecttype = (ObjectType)netSubObj.objectType,
-                                        PDOtype = subPDOtype,
-                                        // following values are optional and may be overriden by parameters from body_device
-                                        accesstype = subAccessType,
                                         datatype = netSubObj.dataType != null && netSubObj.dataType.Length == 1 ? (DataType)netSubObj.dataType[0] : DataType.UNKNOWN,
                                         defaultvalue = netSubObj.defaultValue ?? "",
                                         actualvalue = netSubObj.actualValue ?? "",
@@ -1125,6 +1123,7 @@ namespace libEDSsharp
                                         ObjFlags = netSubObj.objFlags != null && netSubObj.objFlags.Length == 2 ? netSubObj.objFlags[1] : (byte)0,
                                         uniqueID = netSubObj.uniqueIDRef ?? ""
                                     };
+                                    subod.SetAccessType(subAccessType, subPDOtype > PDOMappingType.no);
 
                                     if (netSubObj.uniqueIDRef != null && netSubObj.uniqueIDRef != "" && parameters.ContainsKey(netSubObj.uniqueIDRef))
                                     {
@@ -1132,7 +1131,7 @@ namespace libEDSsharp
 
                                         subod.Description = G_label_getDescription(devSubPar.Items);
 
-                                        subod.accesstype = ConvertAccessType(devSubPar.access);
+                                        subod.SetAccessType(ConvertAccessType(devSubPar.access), subod.PDOMapping);
 
                                         if (devSubPar.defaultValue != null && devSubPar.defaultValue.value != null)
                                             subod.defaultvalue = devSubPar.defaultValue.value;
@@ -1159,8 +1158,7 @@ namespace libEDSsharp
                                     if (od.objecttype == ObjectType.ARRAY)
                                     {
                                         od.datatype = subod.datatype;
-                                        od.accesstype = subod.accesstype;
-                                        od.PDOtype = subod.PDOtype;
+                                        od.SetAccessType(subod.accesstype, subod.PDOMapping);
                                         od.prop.CO_accessSRDO = subod.prop.CO_accessSRDO;
                                     }
 
