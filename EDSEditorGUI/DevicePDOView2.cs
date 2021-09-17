@@ -435,6 +435,7 @@ namespace ODEditor
                     continue;
 
                 grid1.Redim(grid1.RowsCount + 1, grid1.ColumnsCount);
+
                 grid1.Rows[grid1.RowsCount - 1].Tag = slot;
                 grid1.Rows[row + 2].Height = 30;
 
@@ -454,9 +455,10 @@ namespace ODEditor
 
                     int gridY = bitoff + 3;
                     int gridX = row + 2;
-                    if (gridY < grid1.ColumnsCount)
+                    if (gridY + entry.Sizeofdatatype() <= grid1.ColumnsCount)
                     {
                         grid1[gridX, gridY] = new SourceGrid.Cells.Cell(target, comboStandard);
+
                         grid1[gridX, gridY].ColumnSpan = entry.Sizeofdatatype();
                         grid1[gridX, gridY].View = viewNormal;
 
@@ -478,7 +480,7 @@ namespace ODEditor
                     else
                     {
                         MessageBox.Show($"Skipping {target} of pdo mapping 0x{slot.MappingIndex:X} because exceeds pdo max len");
-                    } 
+                    }
                     ordinal++;
                 }
 
