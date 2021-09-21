@@ -1155,9 +1155,9 @@ namespace libEDSsharp
             if (accesstype >= EDSsharp.AccessType_Min && accesstype <= EDSsharp.AccessType_Max)
                 this.SetAccessType(accesstype, PDOMapping > PDOMappingType.no);
             else
-                throw new ParameterException("AccessType invalid");  
+                throw new ParameterException("AccessType invalid");
         }
-       
+
         /// <summary>
         /// ODConstructor useful for subobjects
         /// </summary>
@@ -1181,7 +1181,7 @@ namespace libEDSsharp
                 this.SetAccessType(accesstype, PDOMapping > PDOMappingType.no);
             else
                 throw new ParameterException("AccessType invalid");
- 
+
         }
 
 
@@ -1213,12 +1213,12 @@ namespace libEDSsharp
         {
             this.parent = parent;
             this.parameter_name = parameter_name;
-            this.datatype = datatype; 
+            this.datatype = datatype;
             this.defaultvalue = defaultvalue;
             SetAccessType(accesstype, pdoAccess);
         }
 
-      
+
         /// <summary>
         /// Make a deep clone of this ODentry
         /// </summary>
@@ -3152,8 +3152,8 @@ mapped object  (subindex 1...8)
 
             od_mapping.objecttype = ObjectType.REC;
             od_mapping.prop.CO_storageGroup = "ROM";
-            od_mapping.SetAccessType( AccessType.rw, false); //Same as default but inconsistent with ROM above
-         
+            od_mapping.SetAccessType(AccessType.rw, false); //Same as default but inconsistent with ROM above
+
 
             sub = new ODentry("Number of mapped objects", (UInt16)(index + 0x200), DataType.UNSIGNED8, "0", AccessType.ro, PDOMappingType.no, od_mapping);
             od_mapping.subobjects.Add(0, sub);
@@ -3248,8 +3248,16 @@ mapped object  (subindex 1...8)
 
         }
 
-
-
+        public ODentry Getobject(ushort index, ushort subindex)
+        {
+            var entry = ods[index];
+            if (entry.subobjects.Count == 0 && subindex == 0)
+            {
+                return entry;
+            }
+            else
+                return entry.subobjects[subindex];
+        }
     }
 
     public class ParameterException : Exception
