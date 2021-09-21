@@ -83,12 +83,30 @@ namespace libEDSsharp
         public byte syncstart;
         public byte transmissiontype;
 
+
         public PDOSlot()
         {
             configloc = "PERSIST_COMM";
             mappingloc = "PERSIST_COMM";
             transmissiontype = 254;
             Mapping = new List<ODentry>();
+        }
+
+        public PDOSlot(PDOSlot oldSlot)
+        {
+            this.COB = oldSlot.COB;
+            this.configAccessType = oldSlot.configAccessType;
+            this.configloc = oldSlot.configloc;
+            this.eventtimer = oldSlot.eventtimer;
+            this.inhibit = oldSlot.inhibit;
+            this.invalid = oldSlot.invalid;
+            this.mappingAccessType = oldSlot.mappingAccessType;
+            this.mappingloc = oldSlot.mappingloc;
+            this.syncstart = oldSlot.syncstart;
+            this.transmissiontype = oldSlot.transmissiontype;
+            this.ConfigurationIndex = oldSlot.ConfigurationIndex;
+            this.Mapping = new List<ODentry>(oldSlot.Mapping);
+
         }
 
         public string getTargetName(ODentry od)
@@ -130,6 +148,18 @@ namespace libEDSsharp
 
         }
 
+        public void AddMapping(ODentry entry)
+        {
+            int size = 0;
+            foreach (ODentry e in Mapping)
+            {
+                size += e.Sizeofdatatype();
+            }
+
+            if (size + entry.Sizeofdatatype() > 64)
+                return;
+            Mapping.Add(entry);
+        }
         public void insertMapping(int ordinal, ODentry entry)
         {
             int size = 0;
@@ -395,7 +425,7 @@ namespace libEDSsharp
                 else
                     mapping.parameter_name = "RPDO mapping parameter";
 
-                mapping.prop.CO_storageGroup = slot.mappingloc; 
+                mapping.prop.CO_storageGroup = slot.mappingloc;
                 mapping.SetAccessType(slot.mappingAccessType, false);
 
                 sub = new ODentry("Number of mapped objects", (ushort)slot.MappingIndex, 0);
